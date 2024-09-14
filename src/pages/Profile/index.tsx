@@ -63,10 +63,11 @@ const Profile: React.FC = () => {
               🟨 JavaScript
             </span>
           </div>
-
-          <button className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
-            그룹 생성하기
-          </button>
+          <div className="flex justify-end">
+            <button className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition duration-300">
+              그룹 생성하기
+            </button>
+          </div>
         </div>
       </div>
     </div>
