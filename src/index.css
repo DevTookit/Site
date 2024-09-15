@@ -2,16 +2,12 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Reset CSS */
-
-/* Box-sizing */
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
 
-/* Remove default margin and padding */
 html,
 body,
 div,
