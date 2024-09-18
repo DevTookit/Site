@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import {
-  FaCamera,
   FaHtml5,
   FaCss3Alt,
   FaJsSquare,
@@ -60,9 +59,7 @@ const Profile = () => {
   >([]);
   const [skillInput, setSkillInput] = useState('');
   const [filteredSkills, setFilteredSkills] = useState(predefinedSkills);
-  const [profileImage, setProfileImage] = useState(
-    '/src/shared/assets/img/default_profile.png',
-  );
+  const [profileImage, setProfileImage] = useState('');
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -129,19 +126,26 @@ const Profile = () => {
     <div className="flex min-h-screen items-center justify-center">
       <div className="flex">
         {/* 왼쪽 영역 */}
-        <div className="flex h-[540px] w-[300px] flex-col items-center rounded-l-lg bg-lighten-500 p-8">
-          <div className="relative h-[220px] w-[220px] overflow-hidden rounded-full">
-            <img
-              className="h-[220px] w-[220px] rounded-full object-cover"
-              src={profileImage}
-              alt="Profile"
-            />
+        <div className="flex h-[540px] w-[300px] flex-col items-center rounded-l-lg bg-primary p-8 pt-0">
+          <div className="relative h-[390px] w-[300px] bg-lighten-100">
+            {profileImage ? (
+              <img
+                className="h-[390px] w-[300px] object-cover"
+                src={profileImage}
+                alt="Profile"
+              />
+            ) : (
+              <div className="flex h-[390px] w-[300px] items-center justify-center bg-lighten-100">
+                <span className="text-4 text-lighten-300">사진 업로드하기</span>
+              </div>
+            )}
+
             {/* 카메라 아이콘 버튼 */}
             <label
               htmlFor="profileImageUpload"
-              className="absolute bottom-[18px] left-1/2 flex h-[37px] w-[220px] -translate-x-1/2 translate-y-1/2 transform cursor-pointer items-center justify-center rounded-full bg-black"
+              className="absolute bottom-[12px] right-[8px] flex h-[48px] w-[48px] transform cursor-pointer items-center justify-center rounded-full bg-black"
             >
-              <FaCamera className="text-xl text-white" />
+              <img src="/src/shared/assets/svg/icon_add_camera.svg" />
               <input
                 id="profileImageUpload"
                 type="file"
@@ -151,52 +155,54 @@ const Profile = () => {
               />
             </label>
           </div>
-          <h2 className="mt-4 text-center text-2xl">우영우</h2>
-          <p className="mt-auto text-center text-lighten-300">
+          <h2 className="mt-4 text-center text-2xl text-lighten-600">우영우</h2>
+          <p className="mb-auto text-center text-lighten-300">
             Woo0woo@gamil.com
           </p>
         </div>
 
         {/* 오른쪽 영역 */}
-        <div className="flex h-[540px] w-[680px] flex-col rounded-r-lg bg-lighten-100 p-[40px_30px_40px_80px]">
-          <div className="mb-4 flex flex-1 flex-col">
-            <span className="text-[32px] text-lighten-500">환영합니다!</span>
+        <div className="flex h-[540px] w-[680px] flex-col rounded-r-lg bg-darken-100 p-[40px_30px_40px_80px]">
+          <div className="mb-[80px] flex flex-col">
+            <span className="text-[32px] text-lighten-500">DevToolKit</span>
             <span className="text-[20px] text-lighten-400">
-              데릭님을 위한 데브 툴킷이 준비되었습니다 :)
+              영우님의 프로필을 완성해주세요!
             </span>
           </div>
-          <div>
+          <div className="flex-1">
             <div className="mb-4">
-              <label className="mb-1 block text-lighten-500">직업</label>
+              <label className="hidden">직업</label>
               <input
                 type="text"
                 value={job}
                 onChange={(e) => setJob(e.target.value)}
                 placeholder="직업을 입력해주세요."
-                className="h-[40px] w-[300px] rounded-md bg-lighten-500 p-2 text-white placeholder:text-lighten-600"
+                className="h-[60px] w-[559px] rounded-md border-2 border-solid border-lighten-100 bg-darken-100 p-4 text-white placeholder:text-lighten-500"
               />
             </div>
 
-            <div className="mb-4">
-              <label className="mb-1 block text-lighten-500">나의 스킬</label>
+            <div className="relrative">
+              <label className="hidden">나의 스킬</label>
               <input
                 type="text"
                 value={skillInput}
                 onChange={onChangeSkillInputChange}
                 onKeyDown={onKeyDownSkillAdd}
                 placeholder="개발 스택을 입력해주세요."
-                className="h-[40px] w-[300px] rounded-md bg-lighten-500 p-2 text-white placeholder:text-lighten-600"
+                className="h-[60px] w-[559px] rounded-md border-2 border-solid border-lighten-100 bg-darken-100 p-4 text-white placeholder:text-lighten-500"
               />
               {/* 추천 검색어 */}
               {skillInput && filteredSkills.length && (
-                <div className="absolute mt-2 flex max-w-[600px] flex-wrap gap-2 rounded-md bg-lighten-500 p-2">
+                <div className="absolute flex max-w-[559px] flex-wrap gap-2 rounded-b-md border-2 border-t-0 border-solid border-lighten-100 bg-darken-100 p-2">
                   {filteredSkills.map((skill) => (
                     <div
                       key={skill.name}
                       onClick={() => handleAddSkill(skill)}
-                      className={`flex cursor-pointer items-center space-x-2 rounded-full bg-lighten-600 px-3 py-1 ${skill.color}`}
+                      className={`flex cursor-pointer items-center space-x-2 rounded-full bg-lighten-100 px-3 py-1 text-lighten-500`}
                     >
-                      {skill.icon && <skill.icon />}
+                      {skill.icon && (
+                        <skill.icon className={`${skill.color}`} />
+                      )}
                       <span>{skill.name}</span>
                     </div>
                   ))}
@@ -206,9 +212,9 @@ const Profile = () => {
                 {skills.map((skill) => (
                   <div
                     key={skill.name}
-                    className={`flex items-center space-x-2 rounded-full bg-lighten-600 px-3 py-1 ${skill.color}`}
+                    className={`flex items-center space-x-2 rounded-full bg-lighten-100 px-3 py-1 text-lighten-500`}
                   >
-                    {skill.icon && <skill.icon />}
+                    {skill.icon && <skill.icon className={`${skill.color}`} />}
                     <span>{skill.name}</span>
                     <button
                       onClick={() => onClickSkillRemove(skill.name)}
@@ -220,11 +226,11 @@ const Profile = () => {
                 ))}
               </div>
             </div>
-            <div className="mt-10 flex items-center justify-end">
-              <button className="hover:bg-brand-dark mt-auto h-[48px] w-[180px] rounded-md bg-brand text-white">
-                그룹 생성하기
-              </button>
-            </div>
+          </div>
+          <div className="flex w-full items-center justify-end">
+            <button className="hover:bg-brand-dark mt-auto h-[58px] w-full rounded-md bg-lighten-100 text-[20px] text-lighten-600">
+              프로필 생성하기
+            </button>
           </div>
         </div>
       </div>
