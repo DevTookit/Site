@@ -146,7 +146,7 @@ const Profile = () => {
               className="absolute bottom-[12px] right-[8px] flex h-[48px] w-[48px] transform cursor-pointer items-center justify-center rounded-full bg-black"
             >
               <img
-                src="/public/assets/svg/icon_add_camera.svg"
+                src="/assets/svg/icon_add_camera.svg"
                 alt="이미지 추가 버튼"
               />
               <input
