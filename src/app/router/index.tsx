@@ -7,6 +7,7 @@ import LoginPage from '@/pages/auth/Login';
 import ProfileSettingsPage from '@/pages/Profile/Settings';
 import PublishPage from '@/pages/Test/Publish';
 import ProfileCreationProgress from '@/pages/auth/ProfileCreationProgress';
+import Group from '@/pages/Group';
 
 const AppRouter: React.FC = () => {
   return (
@@ -23,6 +24,7 @@ const AppRouter: React.FC = () => {
             path="/auth/profile/creation"
             element={<ProfileCreationProgress />}
           />
+          <Route path="/group" element={<Group />} />
           <Route path="/publish" element={<PublishPage />} />
           {/* 404 페이지 처리 */}
           <Route path="*" element={<LoginPage />} />
