@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from '@/pages/auth/Login';
 import ProfileSettingsPage from '@/pages/Profile/Settings';
 import PublishPage from '@/pages/Test/Publish';
+import ProfileCreationProgress from '@/pages/auth/ProfileCreationProgress';
 
 const AppRouter: React.FC = () => {
   return (
@@ -14,7 +15,14 @@ const AppRouter: React.FC = () => {
         <Routes>
           <Route path="/" element={<PublishPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
-          <Route path="/profile/settings" element={<ProfileSettingsPage />} />
+          <Route
+            path="/auth/profile/settings"
+            element={<ProfileSettingsPage />}
+          />
+          <Route
+            path="/auth/profile/creation"
+            element={<ProfileCreationProgress />}
+          />
           <Route path="/publish" element={<PublishPage />} />
           {/* 404 페이지 처리 */}
           <Route path="*" element={<LoginPage />} />
