@@ -24,8 +24,9 @@
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
     "paths": {
-      "@/*": ["src/*"]
+      "@/*": ["src/*"],
+      "@svg/*": ["public/assets/svg/*"]
     }
   },
-  "include": ["src", "src/shared/types/svg.d.ts"]
+  "include": ["src", "src/shared/**/*"]
 }

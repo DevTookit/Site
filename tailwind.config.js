@@ -4,6 +4,10 @@ module.exports = {
   content: ['./src/**/*.{js,jsx,ts,tsx,css}'],
   theme: {
     extend: {
+      boxShadow: {
+        'onboarding-btn': '0px 2px 12px 8px rgba(150, 161, 253, 0.12)',
+      },
+
       colors: {
         white: '#ffffff',
         primary: '#1E1F22',
@@ -22,6 +26,7 @@ module.exports = {
           600: '#D2D3D3',
         },
         brand: '#203AAC', // 여기서 따옴표 수정
+        error: '#FD686B',
       },
     },
   },

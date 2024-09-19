@@ -1,23 +1,24 @@
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import { resolve } from 'path';
-import { defineConfig, loadEnv } from 'vite';
-import svgr from 'vite-plugin-svgr';
 import tsconfigPaths from 'vite-tsconfig-paths';
+import svgr from 'vite-plugin-svgr';
+import { resolve } from 'path';
 
-// https://vitejs.dev/config/
-export default defineConfig(({ mode }) => {
-  const env = loadEnv(mode, process.cwd(), '');
-
-  return {
-    resolve: {
-      alias: [
-        { find: '@/src', replacement: resolve(__dirname, 'src') },
-        { find: '@/assets', replacement: resolve(__dirname, 'src/assets') },
-      ],
-    },
-    define: {
-      'process.env': env,
-    },
-    plugins: [react(), tsconfigPaths(), svgr({ svgrOptions: { icon: true } })],
-  };
+export default defineConfig({
+  resolve: {
+    alias: [
+      { find: '@/src', replacement: resolve(__dirname, 'src') },
+      { find: '@svg', replacement: resolve(__dirname, 'public/assets/svg') },
+      { find: '@img', replacement: resolve(__dirname, 'public/assets/img') },
+    ],
+  },
+  plugins: [
+    react(),
+    tsconfigPaths(),
+    svgr({
+      svgrOptions: {
+        icon: false, // SVG를 React 컴포넌트로 변환 시 아이콘 스타일로 설정
+      },
+    }),
+  ],
 });
