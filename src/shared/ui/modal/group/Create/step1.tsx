@@ -16,7 +16,11 @@ const CreateGroupStep1: React.FC<CreateGroupStep1rops> = ({
     <div className="h-[340px] rounded-[10px] bg-primary">
       <div className="relative mb-5 flex h-[200px] items-center justify-center rounded-t-lg bg-lighten-100">
         {image ? (
-          <img className="h-full w-full" src={image} alt="그룹 프로필 이미지" />
+          <img
+            className="h-full w-full object-cover"
+            src={image}
+            alt="그룹 프로필 이미지"
+          />
         ) : (
           <span className="text-lg text-lighten-300">
             그룹 대표 이미지 등록
