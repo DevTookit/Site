@@ -22,7 +22,7 @@ export default tseslint.config({
       tsconfigRootDir: import.meta.dirname,
     },
   },
-})
+});
 ```
 
 - Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
@@ -47,4 +47,8 @@ export default tseslint.config({
     ...react.configs['jsx-runtime'].rules,
   },
 })
+
+
+node version : 22.2.0
+npm version : 10.7.0
 ```
