@@ -1,14 +1,16 @@
 import EditDocumentRounded from '@svg/icon_edit_document_rounded.svg?react';
 import ChevronRightRounded from '@svg/icon_chevron_right_rounded.svg?react';
+import CheckRounded from '@svg/icon_check_rounded.svg?react';
 interface ButtonProps {
-  active: boolean;
+  state: 'check' | 'active' | '';
   onClickFn: () => void;
 }
 
-const WritePostBtn: React.FC<ButtonProps> = ({ active, onClickFn }) => {
+const WritePostBtn: React.FC<ButtonProps> = ({ state, onClickFn }) => {
   return (
     <button
-      className={`flex h-20 w-[440px] items-center justify-start rounded-lg bg-primary p-4 hover:bg-gray-600 ${active && 'shadow-onboarding-btn border-[1px] border-solid border-brand'}`}
+      className={`flex h-20 w-[440px] items-center justify-start rounded-lg bg-primary p-4 hover:bg-gray-600 ${state === 'active' && 'shadow-onboarding-btn border-[1px] border-solid border-brand'}`}
+      onClick={() => state === 'active' && onClickFn()}
     >
       <EditDocumentRounded className="mr-5 h-10 w-10" />
       <div className="flex flex-1 flex-col items-start">
@@ -17,7 +19,8 @@ const WritePostBtn: React.FC<ButtonProps> = ({ active, onClickFn }) => {
           파일, 글, 코드를 모아 아카이빙하기
         </span>
       </div>
-      {active && <ChevronRightRounded onClick={onClickFn} />}
+      {state === 'active' && <ChevronRightRounded />}
+      {state === 'check' && <CheckRounded />}
     </button>
   );
 };

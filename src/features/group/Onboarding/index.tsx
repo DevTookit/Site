@@ -18,15 +18,26 @@ const GroupOnboarding: React.FC<Props> = ({
     setCreateGroupIsOpen(true);
   };
 
+  const getOnboardingStepStatus = (
+    chkStep: number,
+  ): 'active' | 'check' | '' => {
+    if (onboardingStep === chkStep) return 'active';
+    else if (onboardingStep > chkStep) return 'check';
+    else return '';
+  };
+
   return (
     <div className="space-y-[10px]">
       <CreateGroupBtn
-        active={onboardingStep === 1}
+        state={getOnboardingStepStatus(1)}
         onClickFn={onClickCreateGroupBtn}
       />
-      <EditCategoryBtn active={onboardingStep === 2} onClickFn={() => {}} />
-      <WritePostBtn active={onboardingStep === 3} onClickFn={() => {}} />
-      <ExplorePageBtn active={onboardingStep === 4} onClickFn={() => {}} />
+      <EditCategoryBtn
+        state={getOnboardingStepStatus(2)}
+        onClickFn={() => {}}
+      />
+      <WritePostBtn state={getOnboardingStepStatus(3)} onClickFn={() => {}} />
+      <ExplorePageBtn state={getOnboardingStepStatus(4)} onClickFn={() => {}} />
     </div>
   );
 };

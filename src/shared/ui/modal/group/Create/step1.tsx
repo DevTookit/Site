@@ -39,9 +39,9 @@ const CreateGroupStep1: React.FC<CreateGroupStep1rops> = ({
         </label>
       </div>
       <div className="px-10">
-        <p className="text-bold mb-5 text-xl text-lighten-500">
+        <h4 className="text-bold mb-5 text-xl text-lighten-500">
           그룹 이름 설정
-        </p>
+        </h4>
         <input
           type="text"
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

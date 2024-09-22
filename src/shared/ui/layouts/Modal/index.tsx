@@ -20,7 +20,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-primary bg-opacity-50">
-      <div className="relative max-h-full w-full max-w-[520px] p-4">
+      <div className="relative max-h-full w-full max-w-[520px]">
         <div className="relative rounded-lg bg-primary shadow dark:bg-gray-700">
           {children}
           <div className="flex items-end justify-between rounded-b px-10 pb-5">

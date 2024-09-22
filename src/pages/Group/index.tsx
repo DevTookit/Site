@@ -10,17 +10,28 @@ import AlarmCircleRounded from '@svg/icon_alarm_circle_rounded.svg?react';
 import MypageCircleRounded from '@svg/icon_mypage_circle_rounded.svg?react';
 import SearchRounded from '@svg/icon_search_rounded.svg?react';
 import CreateGroupModal from '@/features/group/modal/CreateGroup';
+import CreateCategoryModal from '@/features/category/modal/CreateCategory';
 
 const Group: React.FC = () => {
   const [onboardingStep, setOnboardingStep] = useState(1); //온보딩 상태
-  const [createGroupIsOpen, setCreateGroupIsOpen] = useState(false);
+  const [groupIsOpen, setGroupIsOpen] = useState(false);
+  const [cgryIsOpen, setCgryIsOpen] = useState(false);
+
+  const handleOnboardingNextStep = () => {
+    setOnboardingStep(onboardingStep + 1);
+  };
 
   return (
     <div className="flex h-screen w-full">
+      {/* 그룹생성 모달 */}
       <CreateGroupModal
-        isOpen={createGroupIsOpen}
-        setIsOpen={setCreateGroupIsOpen}
+        isOpen={groupIsOpen}
+        setIsOpen={setGroupIsOpen}
+        handleOnboardingNextStep={handleOnboardingNextStep}
       />
+      {/* 카테고리 생성편집 모달 */}
+      <CreateCategoryModal isOpen={cgryIsOpen} setIsOpen={setCgryIsOpen} />
+
       {/* Sidebar */}
       <GroupSideBar />
 
@@ -60,7 +71,7 @@ const Group: React.FC = () => {
           <GroupOnboarding
             onboardingStep={onboardingStep}
             setOnboardingStep={setOnboardingStep}
-            setCreateGroupIsOpen={setCreateGroupIsOpen}
+            setCreateGroupIsOpen={setGroupIsOpen}
           />
         </section>
       </main>

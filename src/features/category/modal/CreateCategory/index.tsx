@@ -1,7 +1,5 @@
 /* component */
 import ModalLayout from '@/shared/ui/layouts/Modal';
-import CreateGroupStep1 from '@/shared/ui/modal/group/Create/step1';
-import CreateGroupStep2 from '@/shared/ui/modal/group/Create/step2';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */
@@ -10,31 +8,14 @@ import useCreate from '@/shared/hook/useCreate';
 interface CreateGroupProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
-  handleOnboardingNextStep: () => void;
 }
 
-const CreateGroup: React.FC<CreateGroupProps> = ({
-  isOpen,
-  setIsOpen,
-  handleOnboardingNextStep,
-}) => {
+const CreateCategory: React.FC<CreateGroupProps> = ({ isOpen, setIsOpen }) => {
   const [step, setStep] = useState<number>(1);
   const [image, setImage] = useState<string>('');
   const [groupName, setGroupName] = useState<string>('');
   const [visibility, setVisibility] = useState<boolean>(true);
   const { updateCreateGroupData, submitGroupCreate } = useCreate();
-
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onload = (event: ProgressEvent<FileReader>) => {
-        if (event.target?.result) {
-          setImage(event.target.result.toString());
-        }
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    }
-  };
 
   const resetData = () => {
     setStep(1);
@@ -58,7 +39,6 @@ const CreateGroup: React.FC<CreateGroupProps> = ({
     } else {
       updateCreateGroupData({ visibility });
       submitGroupCreate(); //생성
-      handleOnboardingNextStep(); //유저정보에서 온보딩 여부 X일 때
       setIsOpen(false);
     }
   };
@@ -73,17 +53,9 @@ const CreateGroup: React.FC<CreateGroupProps> = ({
         rBtnFn: onClickNextBtn,
       }}
     >
-      {step === 1 ? (
-        <CreateGroupStep1
-          image={image}
-          handleImageChange={handleImageChange}
-          setGroupName={setGroupName}
-        />
-      ) : (
-        <CreateGroupStep2 setVisibility={setVisibility} />
-      )}
+      <div>1</div>
     </ModalLayout>
   );
 };
 
-export default CreateGroup;
+export default CreateCategory;
