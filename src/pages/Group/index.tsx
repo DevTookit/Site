@@ -71,7 +71,8 @@ const Group: React.FC = () => {
           <GroupOnboarding
             onboardingStep={onboardingStep}
             setOnboardingStep={setOnboardingStep}
-            setCreateGroupIsOpen={setGroupIsOpen}
+            setGroupIsOpen={setGroupIsOpen}
+            setCgryIsOpen={setCgryIsOpen}
           />
         </section>
       </main>

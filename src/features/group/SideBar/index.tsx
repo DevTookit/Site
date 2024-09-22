@@ -6,11 +6,26 @@ import Edit from '@svg/icon_edit.svg?react';
 import ExploreRounded from '@svg/icon_explore_rounded.svg?react';
 import FolderRounded from '@svg/icon_folder_rounded.svg?react';
 
+/*components*/
+import useContextMenu from '@/shared/hooks/useContextMenu';
+import ContextMenu from '@/shared/ui/ContextMenu';
+
 const GroupSideBar = () => {
+  const { x, y, isVisible, showContextMenu, hideContextMenu } =
+    useContextMenu();
+  const options = [
+    { label: '카테고리 편집', onClick: () => alert('Option 1 Clicked') },
+    { label: '카테고리 복제', onClick: () => alert('Option 1 Clicked') },
+    { label: '카테고리 삭제', onClick: () => alert('Option 2 Clicked') },
+  ];
+
   return (
-    <aside className="flex w-[280px] flex-col bg-darken-300 p-5 text-gray-200">
+    <aside
+      className="flex w-[280px] flex-col bg-darken-300 p-5 text-gray-200"
+      onClick={hideContextMenu}
+    >
       <div className="mb-3 flex">
-        <div className="bg-error mr-2 h-6 w-6 rounded-[4px]">
+        <div className="mr-2 h-6 w-6 rounded-[4px] bg-error">
           {/* <img src="" alt="프로필 이미지" /> */}
         </div>
         <h4>DEV.TOOLKIT</h4>
@@ -46,7 +61,10 @@ const GroupSideBar = () => {
           </button>
         </div>
         <ul>
-          <li className="flex h-10 cursor-pointer rounded-lg bg-primary p-2">
+          <li
+            className="flex h-10 cursor-pointer rounded-lg bg-primary p-2"
+            onContextMenu={showContextMenu}
+          >
             <div className="flex flex-1 items-center">
               <FolderRounded className="mr-[10px]" />
               <span className="text-base text-[#D2D3D3]">임시 카테고리</span>
@@ -55,6 +73,7 @@ const GroupSideBar = () => {
           </li>
         </ul>
       </div>
+      <ContextMenu x={x} y={y} isVisible={isVisible} options={options} />
     </aside>
   );
 };

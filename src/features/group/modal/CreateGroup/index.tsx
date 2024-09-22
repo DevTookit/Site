@@ -5,7 +5,7 @@ import CreateGroupStep2 from '@/shared/ui/modal/group/Create/step2';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */
-import useCreate from '@/shared/hook/useCreate';
+import useCreate from '@/shared/hooks/useCreate';
 
 interface CreateGroupProps {
   isOpen: boolean;

@@ -3,7 +3,7 @@ import ModalLayout from '@/shared/ui/layouts/Modal';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */
-import useCreate from '@/shared/hook/useCreate';
+import useCreate from '@/shared/hooks/useCreate';
 
 interface CreateGroupProps {
   isOpen: boolean;

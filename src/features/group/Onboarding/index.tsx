@@ -7,17 +7,15 @@ import ExplorePageBtn from '@/shared/ui/onboarding/Button/ExplorePage';
 interface Props {
   onboardingStep: number;
   setOnboardingStep: (newStep: number) => void;
-  setCreateGroupIsOpen: (createGroupIsOpen: boolean) => void;
+  setGroupIsOpen: (groupIsOpen: boolean) => void;
+  setCgryIsOpen: (cgryIsOpen: boolean) => void;
 }
 
 const GroupOnboarding: React.FC<Props> = ({
   onboardingStep,
-  setCreateGroupIsOpen,
+  setGroupIsOpen,
+  setCgryIsOpen,
 }) => {
-  const onClickCreateGroupBtn = () => {
-    setCreateGroupIsOpen(true);
-  };
-
   const getOnboardingStepStatus = (
     chkStep: number,
   ): 'active' | 'check' | '' => {
@@ -30,11 +28,11 @@ const GroupOnboarding: React.FC<Props> = ({
     <div className="space-y-[10px]">
       <CreateGroupBtn
         state={getOnboardingStepStatus(1)}
-        onClickFn={onClickCreateGroupBtn}
+        onClickFn={() => setGroupIsOpen(true)}
       />
       <EditCategoryBtn
         state={getOnboardingStepStatus(2)}
-        onClickFn={() => {}}
+        onClickFn={() => setCgryIsOpen(true)}
       />
       <WritePostBtn state={getOnboardingStepStatus(3)} onClickFn={() => {}} />
       <ExplorePageBtn state={getOnboardingStepStatus(4)} onClickFn={() => {}} />
