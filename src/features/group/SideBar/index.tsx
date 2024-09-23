@@ -7,14 +7,18 @@ import ExploreRounded from '@svg/icon_explore_rounded.svg?react';
 import FolderRounded from '@svg/icon_folder_rounded.svg?react';
 
 /*components*/
-import useContextMenu from '@/shared/hooks/useContextMenu';
+import useContextMenuStore from '@/shared/store/contextStore';
 import ContextMenu from '@/shared/ui/ContextMenu';
 
-const GroupSideBar = () => {
+interface Props {
+  setCgryIsOpen: (cgryIsOpen: boolean) => void;
+}
+
+const GroupSideBar: React.FC<Props> = ({ setCgryIsOpen }) => {
   const { x, y, isVisible, showContextMenu, hideContextMenu } =
-    useContextMenu();
+    useContextMenuStore();
   const options = [
-    { label: '카테고리 편집', onClick: () => alert('Option 1 Clicked') },
+    { label: '카테고리 편집', onClick: () => setCgryIsOpen(true) },
     { label: '카테고리 복제', onClick: () => alert('Option 1 Clicked') },
     { label: '카테고리 삭제', onClick: () => alert('Option 2 Clicked') },
   ];
@@ -63,7 +67,11 @@ const GroupSideBar = () => {
         <ul>
           <li
             className="flex h-10 cursor-pointer rounded-lg bg-primary p-2"
-            onContextMenu={showContextMenu}
+            onContextMenu={(e) => {
+              e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
+              e.stopPropagation(); // 이벤트 전파 방지
+              showContextMenu(e.clientX, e.clientY);
+            }}
           >
             <div className="flex flex-1 items-center">
               <FolderRounded className="mr-[10px]" />

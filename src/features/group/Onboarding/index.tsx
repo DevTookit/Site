@@ -3,19 +3,20 @@ import CreateGroupBtn from '@/shared/ui/onboarding/Button/CreateGroup';
 import EditCategoryBtn from '@/shared/ui/onboarding/Button/EditCategory';
 import WritePostBtn from '@/shared/ui/onboarding/Button/WritePost';
 import ExplorePageBtn from '@/shared/ui/onboarding/Button/ExplorePage';
+import useContextMenuStore from '@/shared/store/contextStore';
 
 interface Props {
   onboardingStep: number;
   setOnboardingStep: (newStep: number) => void;
   setGroupIsOpen: (groupIsOpen: boolean) => void;
-  setCgryIsOpen: (cgryIsOpen: boolean) => void;
 }
 
 const GroupOnboarding: React.FC<Props> = ({
   onboardingStep,
   setGroupIsOpen,
-  setCgryIsOpen,
 }) => {
+  const { showContextMenu } = useContextMenuStore();
+
   const getOnboardingStepStatus = (
     chkStep: number,
   ): 'active' | 'check' | '' => {
@@ -32,7 +33,7 @@ const GroupOnboarding: React.FC<Props> = ({
       />
       <EditCategoryBtn
         state={getOnboardingStepStatus(2)}
-        onClickFn={() => setCgryIsOpen(true)}
+        onClickFn={() => showContextMenu(242, 270)}
       />
       <WritePostBtn state={getOnboardingStepStatus(3)} onClickFn={() => {}} />
       <ExplorePageBtn state={getOnboardingStepStatus(4)} onClickFn={() => {}} />

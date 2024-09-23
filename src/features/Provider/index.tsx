@@ -10,6 +10,7 @@ export interface CreateContextType {
   updateCreateGroupData: (newData: Partial<CreateGroupData>) => void;
   updateEditCategoryData: (newData: Partial<EditCategoryData>) => void;
   submitGroupCreate: () => void;
+  submitCategoryCreate: () => void;
 }
 
 const CreateContext = createContext<CreateContextType | undefined>(undefined);
@@ -37,6 +38,11 @@ export const CreateProvider: React.FC<{ children: ReactNode }> = ({
   };
 
   const submitGroupCreate = async () => {
+    alert('그룹 생성');
+    // API 요청 로직 작성
+  };
+  const submitCategoryCreate = async () => {
+    alert('카테고리 편집');
     // API 요청 로직 작성
   };
 
@@ -47,6 +53,7 @@ export const CreateProvider: React.FC<{ children: ReactNode }> = ({
         updateCreateGroupData,
         updateEditCategoryData,
         submitGroupCreate,
+        submitCategoryCreate,
       }}
     >
       {children}

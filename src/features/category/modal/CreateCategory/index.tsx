@@ -1,5 +1,6 @@
 /* component */
 import ModalLayout from '@/shared/ui/layouts/Modal';
+import CreateCategoryContent from '@/shared/ui/modal/category/Create';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */
@@ -8,52 +9,53 @@ import useCreate from '@/shared/hooks/useCreate';
 interface CreateGroupProps {
   isOpen: boolean;
   setIsOpen: (isOpen: boolean) => void;
+  handleOnboardingNextStep: () => void;
 }
 
-const CreateCategory: React.FC<CreateGroupProps> = ({ isOpen, setIsOpen }) => {
-  const [step, setStep] = useState<number>(1);
-  const [image, setImage] = useState<string>('');
-  const [groupName, setGroupName] = useState<string>('');
-  const [visibility, setVisibility] = useState<boolean>(true);
-  const { updateCreateGroupData, submitGroupCreate } = useCreate();
+const CreateCategory: React.FC<CreateGroupProps> = ({
+  isOpen,
+  setIsOpen,
+  handleOnboardingNextStep,
+}) => {
+  const [categoryName, setCategoryName] = useState<string>('');
+  const [visibility, setVisibility] = useState<string>('visible-false');
+  const { updateEditCategoryData, submitCategoryCreate } = useCreate();
 
   const resetData = () => {
-    setStep(1);
-    setImage('');
-    setGroupName('');
-    setVisibility(false);
+    setCategoryName('');
+    setVisibility('visible-false');
   };
 
   const onClickPrevBtn = () => {
-    if (step > 1) setStep(1);
-    else {
-      setIsOpen(false);
-      resetData();
-    }
+    setIsOpen(false);
+    resetData();
   };
 
   const onClickNextBtn = () => {
-    if (step === 1) {
-      updateCreateGroupData({ image, groupName });
-      setStep(step + 1);
-    } else {
-      updateCreateGroupData({ visibility });
-      submitGroupCreate(); //생성
-      setIsOpen(false);
-    }
+    updateEditCategoryData({
+      categoryName,
+      visibility: visibility === 'visible-false',
+    });
+    submitCategoryCreate(); //생성
+    handleOnboardingNextStep();
+    setIsOpen(false);
   };
 
   return (
     <ModalLayout
       isOpen={isOpen}
       btnOption={{
-        lBtnNm: '뒤로가기',
+        lBtnNm: '취소',
         lBtnFn: onClickPrevBtn,
-        rBtnNm: step === 1 ? '다음' : '생성',
+        rBtnNm: '저장',
         rBtnFn: onClickNextBtn,
       }}
     >
-      <div>1</div>
+      <CreateCategoryContent
+        setCategoryName={setCategoryName}
+        visibility={visibility}
+        setVisibility={setVisibility}
+      />
     </ModalLayout>
   );
 };

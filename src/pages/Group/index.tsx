@@ -30,10 +30,14 @@ const Group: React.FC = () => {
         handleOnboardingNextStep={handleOnboardingNextStep}
       />
       {/* 카테고리 생성편집 모달 */}
-      <CreateCategoryModal isOpen={cgryIsOpen} setIsOpen={setCgryIsOpen} />
+      <CreateCategoryModal
+        isOpen={cgryIsOpen}
+        setIsOpen={setCgryIsOpen}
+        handleOnboardingNextStep={handleOnboardingNextStep}
+      />
 
       {/* Sidebar */}
-      <GroupSideBar />
+      <GroupSideBar setCgryIsOpen={setCgryIsOpen} />
 
       {/* Main Content Area */}
       <main className="flex flex-1 flex-grow flex-col items-center justify-between bg-lighten-100 px-10 pt-[60px]">
@@ -72,7 +76,6 @@ const Group: React.FC = () => {
             onboardingStep={onboardingStep}
             setOnboardingStep={setOnboardingStep}
             setGroupIsOpen={setGroupIsOpen}
-            setCgryIsOpen={setCgryIsOpen}
           />
         </section>
       </main>

@@ -40,12 +40,11 @@ const RadioButton: React.FC<RadioButtonProps> = ({
       </div>
       <label
         htmlFor={id}
-        className={`relative flex w-full cursor-pointer flex-col py-2 pl-[60px] pr-4 text-lg font-bold transition-all duration-300 ${
+        className={`relative flex w-full cursor-pointer flex-col py-2 pl-[60px] pr-4 text-lg transition-all duration-300 ${dscr ? 'font-bold' : ''} ${
           isSelected ? 'text-lighten-600' : 'text-lighten-500'
         }`}
       >
         {label}
-
         <span className="font- text-base text-lighten-400">{dscr}</span>
       </label>
     </li>

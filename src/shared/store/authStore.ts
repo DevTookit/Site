@@ -7,8 +7,10 @@ interface AuthState {
   clearToken: () => void;
 }
 
-export const useAuthStore = create<AuthState>((set) => ({
+const useAuthStore = create<AuthState>((set) => ({
   token: null,
   setToken: (token: string) => set({ token }),
   clearToken: () => set({ token: null }),
 }));
+
+export default useAuthStore;
