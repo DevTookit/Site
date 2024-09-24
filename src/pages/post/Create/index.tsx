@@ -15,7 +15,7 @@ const BlogEditor: React.FC = () => {
   return (
     <div className="mx-auto mt-10 max-w-4xl rounded-lg border bg-white p-4">
       <Editor
-        apiKey={import.meta.env.VITE_TINYMCE_API_KEY}
+        apiKey={import.meta.env.VITE_TINY_MCE_API_KEY}
         onInit={(evt, editor) => (editorRef.current = editor)}
         initialValue="Start writing your blog..."
         init={{

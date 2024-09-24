@@ -26,6 +26,7 @@ jobs:
         env:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           API_KEY: ${{ secrets.API_KEY }}
+          VITE_TINY_MCE_API_KEY: ${{ secrets.VITE_TINY_MCE_API_KEY }}
 
       - name: Deploy to S3
         uses: jakejarvis/s3-sync-action@v0.5.1
