@@ -22,7 +22,14 @@ jobs:
         run: npm install
 
       - name: Build project
-        run: npm run build
+        run: |
+          echo "Building project..."
+          if [ -z "${{ secrets.VITE_TINY_MCE_API_KEY }}" ]; then
+            echo "VITE_TINY_MCE_API_KEY is not set!"
+          else
+            echo "VITE_TINY_MCE_API_KEY is set."
+          fi
+          npm run build
         env:
           API_BASE_URL: ${{ secrets.API_BASE_URL }}
           API_KEY: ${{ secrets.API_KEY }}
