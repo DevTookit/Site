@@ -1,5 +1,5 @@
 import api from './axios';
-import { useAuthStore } from '../store/authStore';
+import useAuthStore from '../store/authStore';
 
 type LoginCredentials = {
   username: string;

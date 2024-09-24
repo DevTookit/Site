@@ -1,5 +1,5 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
-import { useAuthStore } from '../store/authStore';
+import useAuthStore from '../store/authStore';
 
 // Axios 인스턴스 생성
 const api = axios.create({

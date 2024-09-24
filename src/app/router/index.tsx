@@ -8,6 +8,7 @@ import ProfileSettingsPage from '@/pages/Profile/Settings';
 import PublishPage from '@/pages/Test/Publish';
 import ProfileCreationProgress from '@/pages/auth/ProfileCreationProgress';
 import Group from '@/pages/Group';
+import PostCreate from '@/pages/post/Create';
 
 const AppRouter: React.FC = () => {
   return (
@@ -26,6 +27,7 @@ const AppRouter: React.FC = () => {
           />
           <Route path="/group" element={<Group />} />
           <Route path="/publish" element={<PublishPage />} />
+          <Route path="/post/create" element={<PostCreate />} />
           {/* 404 페이지 처리 */}
           <Route path="*" element={<LoginPage />} />
         </Routes>
