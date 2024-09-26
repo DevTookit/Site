@@ -3,14 +3,18 @@ import {
   CreateData,
   CreateGroupData,
   EditCategoryData,
+  CreateSubFolderData,
 } from '@/shared/types/types';
 
 export interface CreateContextType {
   data: CreateData;
   updateCreateGroupData: (newData: Partial<CreateGroupData>) => void;
-  updateEditCategoryData: (newData: Partial<EditCategoryData>) => void;
   submitGroupCreate: () => void;
-  submitCategoryCreate: () => void;
+  updateEditCategoryData: (newData: Partial<EditCategoryData>) => void;
+  submitCategoryUpdate: () => void;
+
+  updateCreateSubFolder: (newData: Partial<CreateSubFolderData>) => void;
+  submitSubFolderUpdate: () => void;
 }
 
 const CreateContext = createContext<CreateContextType | undefined>(undefined);
@@ -21,31 +25,44 @@ export const CreateProvider: React.FC<{ children: ReactNode }> = ({
   const [data, setData] = useState<CreateData>({
     createGroup: {},
     editCategory: {},
+    createSubFolder: {},
   });
 
+  //! 그룹생성
   const updateCreateGroupData = (newData: Partial<CreateGroupData>) => {
     setData((prevData: CreateData) => ({
       ...prevData,
       createGroup: { ...prevData.createGroup, ...newData },
     }));
   };
+  const submitGroupCreate = async () => {
+    alert('그룹 생성');
+    // API 요청 로직 작성
+  };
 
+  //! 카테고리 편집
   const updateEditCategoryData = (newData: Partial<EditCategoryData>) => {
     setData((prevData: CreateData) => ({
       ...prevData,
       editCategory: { ...prevData.editCategory, ...newData },
     }));
   };
-
-  const submitGroupCreate = async () => {
-    alert('그룹 생성');
-    // API 요청 로직 작성
-  };
-  const submitCategoryCreate = async () => {
+  const submitCategoryUpdate = async () => {
     alert('카테고리 편집');
     // API 요청 로직 작성
   };
 
+  //! 하위폴더(카테고리, 폴더) 생성
+  const updateCreateSubFolder = (newData: Partial<CreateSubFolderData>) => {
+    setData((prevData: CreateData) => ({
+      ...prevData,
+      editCategory: { ...prevData.editCategory, ...newData },
+    }));
+  };
+  const submitSubFolderUpdate = async () => {
+    alert('하위폴더 생성');
+    // API 요청 로직 작성
+  };
   return (
     <CreateContext.Provider
       value={{
@@ -53,7 +70,9 @@ export const CreateProvider: React.FC<{ children: ReactNode }> = ({
         updateCreateGroupData,
         updateEditCategoryData,
         submitGroupCreate,
-        submitCategoryCreate,
+        submitCategoryUpdate,
+        updateCreateSubFolder,
+        submitSubFolderUpdate,
       }}
     >
       {children}

@@ -19,7 +19,7 @@ const CreateCategory: React.FC<CreateGroupProps> = ({
 }) => {
   const [categoryName, setCategoryName] = useState<string>('');
   const [visibility, setVisibility] = useState<string>('visible-false');
-  const { updateEditCategoryData, submitCategoryCreate } = useCreate();
+  const { updateEditCategoryData, submitCategoryUpdate } = useCreate();
 
   const resetData = () => {
     setCategoryName('');
@@ -36,7 +36,7 @@ const CreateCategory: React.FC<CreateGroupProps> = ({
       categoryName,
       visibility: visibility === 'visible-false',
     });
-    submitCategoryCreate(); //생성
+    submitCategoryUpdate(); //생성
     handleOnboardingNextStep();
     setIsOpen(false);
   };

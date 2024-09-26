@@ -17,7 +17,7 @@ import {
   UpdateUserInfo,
   UserResponse,
   VerifyEmailResponse,
-} from '../types/\bauth';
+} from '../types/authApi';
 
 //! 토큰 발급
 const issueToken = async (): Promise<TokenResponse> => {

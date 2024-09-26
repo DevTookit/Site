@@ -4,7 +4,7 @@ interface ContextMenuProps {
   x: number;
   y: number;
   isVisible: boolean;
-  options: { label: string; onClick: () => void }[];
+  options: { label: string; onClick: () => void; className: string }[];
 }
 
 const ContextMenu: React.FC<ContextMenuProps> = ({
@@ -23,7 +23,7 @@ const ContextMenu: React.FC<ContextMenuProps> = ({
       {options.map((option, index) => (
         <li
           key={index}
-          className="cursor-pointer px-4 py-2 text-base text-lighten-500 hover:text-lighten-600"
+          className={`cursor-pointer px-4 py-2 text-base text-lighten-500 hover:text-lighten-600 ${option.className}`}
           onClick={option.onClick}
         >
           {option.label}

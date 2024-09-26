@@ -9,80 +9,108 @@ import FolderRounded from '@svg/icon_folder_rounded.svg?react';
 /*components*/
 import useContextMenuStore from '@/shared/store/contextStore';
 import ContextMenu from '@/shared/ui/ContextMenu';
+import CreateFolderModal from '@/features/category/modal/CreateFolder';
+import { useState } from 'react';
 
 interface Props {
   setCgryIsOpen: (cgryIsOpen: boolean) => void;
 }
 
 const GroupSideBar: React.FC<Props> = ({ setCgryIsOpen }) => {
+  const [createFolderIsOpen, setCreateFolderIsOpen] = useState(false);
+
   const { x, y, isVisible, showContextMenu, hideContextMenu } =
     useContextMenuStore();
   const options = [
-    { label: '카테고리 편집', onClick: () => setCgryIsOpen(true) },
-    { label: '카테고리 복제', onClick: () => alert('Option 1 Clicked') },
-    { label: '카테고리 삭제', onClick: () => alert('Option 2 Clicked') },
+    {
+      label: '카테고리 편집',
+      onClick: () => setCgryIsOpen(true),
+      className: '',
+    },
+    {
+      label: '하위 폴더 생성',
+      onClick: () => setCreateFolderIsOpen(true),
+      className: '',
+    },
+    {
+      label: '카테고리 복제',
+      onClick: () => alert('카테고리 복제'),
+      className: '',
+    },
+    {
+      label: '카테고리 삭제',
+      onClick: () => alert('카테고리 삭제'),
+      className: 'text-error',
+    },
   ];
 
   return (
-    <aside
-      className="flex w-[280px] flex-col bg-darken-300 p-5 text-gray-200"
-      onClick={hideContextMenu}
-    >
-      <div className="mb-3 flex">
-        <div className="mr-2 h-6 w-6 rounded-[4px] bg-error">
-          {/* <img src="" alt="프로필 이미지" /> */}
+    <>
+      <CreateFolderModal
+        isOpen={createFolderIsOpen}
+        setIsOpen={setCreateFolderIsOpen}
+      />
+
+      <aside
+        className="flex w-[280px] flex-col bg-darken-300 p-5 text-gray-200"
+        onClick={hideContextMenu}
+      >
+        <div className="mb-3 flex">
+          <div className="mr-2 h-6 w-6 rounded-[4px] bg-error">
+            {/* <img src="" alt="프로필 이미지" /> */}
+          </div>
+          <h4>DEV.TOOLKIT</h4>
         </div>
-        <h4>DEV.TOOLKIT</h4>
-      </div>
-      <div className="mb-5 flex items-center rounded-md bg-primary p-[10px]">
-        <img
-          src="/assets/img/login_developer.jpg"
-          alt="User Profile"
-          className="mr-3 h-10 w-10 rounded-full"
-        />
-        <div className="flex-1">
-          <p className="text-[10px] text-lighten-400">채널 관리자</p>
-          <p className="text-xl font-medium text-[#D2D3D3]">우영우</p>
-        </div>
-        <button>
-          <Edit className="h-5 w-5" />
-        </button>
-      </div>
-      <div className="mb-[35px] flex gap-1">
-        <button className="">
-          <AddCircle className="h-10 w-10" />
-        </button>
-        <button className="">
-          <ExploreRounded className="h-10 w-10 text-brand" />
-        </button>
-      </div>
-      {/* Category List */}
-      <div className="text-sm text-gray-400">
-        <div className="flex justify-between">
-          <p className="mb-2 text-lg font-medium text-[#B4B5B5]">category</p>
+        <div className="mb-5 flex items-center rounded-md bg-primary p-[10px]">
+          <img
+            src="/assets/img/login_developer.jpg"
+            alt="User Profile"
+            className="mr-3 h-10 w-10 rounded-full"
+          />
+          <div className="flex-1">
+            <p className="text-[10px] text-lighten-400">채널 관리자</p>
+            <p className="text-xl font-medium text-[#D2D3D3]">우영우</p>
+          </div>
           <button>
-            <Add />
+            <Edit className="h-5 w-5" />
           </button>
         </div>
-        <ul>
-          <li
-            className="flex h-10 cursor-pointer rounded-lg bg-primary p-2"
-            onContextMenu={(e) => {
-              e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
-              e.stopPropagation(); // 이벤트 전파 방지
-              showContextMenu(e.clientX, e.clientY);
-            }}
-          >
-            <div className="flex flex-1 items-center">
-              <FolderRounded className="mr-[10px]" />
-              <span className="text-base text-[#D2D3D3]">임시 카테고리</span>
-            </div>
-            <ArrowDownRounded />
-          </li>
-        </ul>
-      </div>
-      <ContextMenu x={x} y={y} isVisible={isVisible} options={options} />
-    </aside>
+        <div className="mb-[35px] flex gap-1">
+          <button className="">
+            <AddCircle className="h-10 w-10" />
+          </button>
+          <button className="">
+            <ExploreRounded className="h-10 w-10 text-brand" />
+          </button>
+        </div>
+        {/* Category List */}
+        <div className="text-sm text-gray-400">
+          <div className="flex justify-between">
+            <p className="mb-2 text-lg font-medium text-[#B4B5B5]">category</p>
+            <button onClick={() => setCgryIsOpen(true)}>
+              <Add />
+            </button>
+          </div>
+          <ul>
+            <li
+              className="flex h-10 cursor-pointer rounded-lg bg-primary p-2"
+              onContextMenu={(e) => {
+                e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
+                e.stopPropagation(); // 이벤트 전파 방지
+                showContextMenu(e.clientX, e.clientY);
+              }}
+            >
+              <div className="flex flex-1 items-center">
+                <FolderRounded className="mr-[10px]" />
+                <span className="text-base text-[#D2D3D3]">임시 카테고리</span>
+              </div>
+              <ArrowDownRounded />
+            </li>
+          </ul>
+        </div>
+        <ContextMenu x={x} y={y} isVisible={isVisible} options={options} />
+      </aside>
+    </>
   );
 };
 

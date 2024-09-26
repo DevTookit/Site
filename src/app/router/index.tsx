@@ -4,9 +4,9 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // 페이지 컴포넌트 임포트
 import LoginPage from '@/pages/auth/Login';
-import ProfileSettingsPage from '@/pages/Profile/Settings';
+import ProfileSettingsPage from '@/pages/auth/Profile/Settings';
 import PublishPage from '@/pages/Test/Publish';
-import ProfileCreationProgress from '@/pages/auth/ProfileCreationProgress';
+import CreationProgress from '@/pages/auth/Profile/CreationProgress';
 import Group from '@/pages/Group';
 import PostCreate from '@/pages/post/Create';
 
@@ -21,10 +21,7 @@ const AppRouter: React.FC = () => {
             path="/auth/profile/settings"
             element={<ProfileSettingsPage />}
           />
-          <Route
-            path="/auth/profile/creation"
-            element={<ProfileCreationProgress />}
-          />
+          <Route path="/auth/profile/creation" element={<CreationProgress />} />
           <Route path="/group" element={<Group />} />
           <Route path="/publish" element={<PublishPage />} />
           <Route path="/post/create" element={<PostCreate />} />

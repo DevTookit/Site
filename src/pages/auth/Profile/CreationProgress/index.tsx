@@ -4,9 +4,7 @@ interface ProgressBarProps {
   duration?: number; // 프로그레스 바가 100%까지 도달하는 시간 (ms)
 }
 
-const ProfileCreationProgress: React.FC<ProgressBarProps> = ({
-  duration = 3000,
-}) => {
+const CreationProgress: React.FC<ProgressBarProps> = ({ duration = 3000 }) => {
   const progressRef = useRef<HTMLDivElement>(null);
   const [progressPer, setProgressPer] = useState(0);
   const animationFrameRef = useRef<number | null>(null);
@@ -55,4 +53,4 @@ const ProfileCreationProgress: React.FC<ProgressBarProps> = ({
   );
 };
 
-export default ProfileCreationProgress;
+export default CreationProgress;
