@@ -1,6 +1,6 @@
 /* component */
 import ModalLayout from '@/shared/ui/layouts/Modal';
-import CreateCategoryContent from '@/shared/ui/modal/category/Create';
+import CreateCategoryContent from '@/shared/ui/modalContent/category/Create';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */

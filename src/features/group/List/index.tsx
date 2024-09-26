@@ -1,7 +1,7 @@
 /* component */
 import ModalLayout from '@/shared/ui/layouts/Modal';
-import CreateGroupStep1 from '@/shared/ui/modal/group/Create/step1';
-import CreateGroupStep2 from '@/shared/ui/modal/group/Create/step2';
+import CreateGroupStep1 from '@/shared/ui/modalContent/group/Create/step1';
+import CreateGroupStep2 from '@/shared/ui/modalContent/group/Create/step2';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */

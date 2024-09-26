@@ -8,7 +8,8 @@ import ProfileSettingsPage from '@/pages/auth/Profile/Settings';
 import PublishPage from '@/pages/Test/Publish';
 import CreationProgress from '@/pages/auth/Profile/CreationProgress';
 import Group from '@/pages/Group';
-import PostCreate from '@/pages/post/Create';
+import GroupList from '@/pages/Group/List';
+import GroupPostCreate from '@/pages/Group/post/Create';
 import GroupLayout from '../layouts/groupLayout';
 
 //provider
@@ -43,12 +44,24 @@ const AppRouter: React.FC = () => {
             }
           />
           <Route
+            path="/group/list"
+            element={
+              <LayoutProvider>
+                <CreateProvider>
+                  <GroupLayout>
+                    <GroupList />
+                  </GroupLayout>
+                </CreateProvider>
+              </LayoutProvider>
+            }
+          />
+          <Route
             path="/group/post/create"
             element={
               <LayoutProvider>
                 <CreateProvider>
                   <GroupLayout>
-                    <PostCreate />
+                    <GroupPostCreate />
                   </GroupLayout>
                 </CreateProvider>
               </LayoutProvider>

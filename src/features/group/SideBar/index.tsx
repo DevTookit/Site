@@ -5,16 +5,16 @@ import Edit from '@svg/icon_edit.svg?react';
 import ExploreRounded from '@svg/icon_explore_rounded.svg?react';
 import FolderRounded from '@svg/icon_folder_rounded.svg?react';
 import All from '@svg/icon_all.svg?react';
-
 /*components*/
 import useContextMenuStore from '@/shared/store/contextStore';
 import ContextMenu from '@/shared/ui/ContextMenu';
 import CreateFolderModal from '@/features/category/modal/CreateFolder';
 import { useState } from 'react';
 import CategoryDropdown from '@/features/category/Dropdown';
-
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
+
+import { Link } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
 
 const GroupSideBar: React.FC = () => {
   const [createFolderIsOpen, setCreateFolderIsOpen] = useState(false);
@@ -125,7 +125,10 @@ const GroupSideBar: React.FC = () => {
                         showContextMenu(e.clientX, e.clientY);
                       }}
                     >
-                      <div className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2">
+                      <Link
+                        to="/group/list"
+                        className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2"
+                      >
                         <FolderRounded className="mr-[10px]" />
                         <span
                           className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]"
@@ -133,7 +136,7 @@ const GroupSideBar: React.FC = () => {
                         >
                           {'안녕하세요'}
                         </span>
-                      </div>
+                      </Link>
                     </CategoryDropdown>
                   </CategoryDropdown>
                 </CategoryDropdown>
