@@ -4,24 +4,18 @@ import EditCategoryBtn from '@/shared/ui/onboarding/Button/EditCategory';
 import WritePostBtn from '@/shared/ui/onboarding/Button/WritePost';
 import ExplorePageBtn from '@/shared/ui/onboarding/Button/ExplorePage';
 import useContextMenuStore from '@/shared/store/contextStore';
+/* hook */
+import useLayout from '@/shared/hooks/useLayout';
 
-interface Props {
-  onboardingStep: number;
-  setOnboardingStep: (newStep: number) => void;
-  setGroupIsOpen: (groupIsOpen: boolean) => void;
-}
-
-const GroupOnboarding: React.FC<Props> = ({
-  onboardingStep,
-  setGroupIsOpen,
-}) => {
+const GroupOnboarding: React.FC = () => {
+  const { data, setGroupModalIsOpen } = useLayout();
   const { showContextMenu } = useContextMenuStore();
 
   const getOnboardingStepStatus = (
     chkStep: number,
   ): 'active' | 'check' | '' => {
-    if (onboardingStep === chkStep) return 'active';
-    else if (onboardingStep > chkStep) return 'check';
+    if (data.onboardingStep === chkStep) return 'active';
+    else if (data.onboardingStep > chkStep) return 'check';
     else return '';
   };
 
@@ -29,7 +23,7 @@ const GroupOnboarding: React.FC<Props> = ({
     <div className="space-y-[10px]">
       <CreateGroupBtn
         state={getOnboardingStepStatus(1)}
-        onClickFn={() => setGroupIsOpen(true)}
+        onClickFn={() => setGroupModalIsOpen(true)}
       />
       <EditCategoryBtn
         state={getOnboardingStepStatus(2)}

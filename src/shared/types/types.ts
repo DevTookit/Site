@@ -1,3 +1,12 @@
+//! layout provider
+export interface LayoutData {
+  currentFolder: string;
+  cgryModalIsOpen: boolean;
+  groupModalIsOpen: boolean;
+  onboardingStep: number;
+}
+
+//! create provider
 export interface CreateGroupData {
   image?: string;
   groupName?: string;

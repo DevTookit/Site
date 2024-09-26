@@ -6,15 +6,23 @@ import CreateGroupStep2 from '@/shared/ui/modal/group/Create/step2';
 import { useState } from 'react';
 /* hook */
 import useCreate from '@/shared/hooks/useCreate';
-import useLayout from '@/shared/hooks/useLayout';
 
-const CreateGroup: React.FC = () => {
+interface GroupListProps {
+  isOpen: boolean;
+  setIsOpen: (isOpen: boolean) => void;
+  handleOnboardingNextStep: () => void;
+}
+
+const GroupList: React.FC<GroupListProps> = ({
+  isOpen,
+  setIsOpen,
+  handleOnboardingNextStep,
+}) => {
   const [step, setStep] = useState<number>(1);
   const [image, setImage] = useState<string>('');
   const [groupName, setGroupName] = useState<string>('');
   const [visibility, setVisibility] = useState<boolean>(true);
   const { updateCreateGroupData, submitGroupCreate } = useCreate();
-  const { data, setGroupModalIsOpen, setOnboardingStep } = useLayout();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -38,7 +46,7 @@ const CreateGroup: React.FC = () => {
   const onClickPrevBtn = () => {
     if (step > 1) setStep(1);
     else {
-      setGroupModalIsOpen(false);
+      setIsOpen(false);
       resetData();
     }
   };
@@ -50,14 +58,14 @@ const CreateGroup: React.FC = () => {
     } else {
       updateCreateGroupData({ visibility });
       submitGroupCreate(); //생성
-      setOnboardingStep(data.onboardingStep + 1); //유저정보에서 온보딩 여부 X일 때
-      setGroupModalIsOpen(false);
+      handleOnboardingNextStep(); //유저정보에서 온보딩 여부 X일 때
+      setIsOpen(false);
     }
   };
 
   return (
     <ModalLayout
-      isOpen={data.groupModalIsOpen}
+      isOpen={isOpen}
       btnOption={{
         lBtnNm: '뒤로가기',
         lBtnFn: onClickPrevBtn,
@@ -78,4 +86,4 @@ const CreateGroup: React.FC = () => {
   );
 };
 
-export default CreateGroup;
+export default GroupList;

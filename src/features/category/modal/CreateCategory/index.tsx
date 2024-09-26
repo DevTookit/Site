@@ -5,21 +5,13 @@ import CreateCategoryContent from '@/shared/ui/modal/category/Create';
 import { useState } from 'react';
 /* hook */
 import useCreate from '@/shared/hooks/useCreate';
+import useLayout from '@/shared/hooks/useLayout';
 
-interface CreateGroupProps {
-  isOpen: boolean;
-  setIsOpen: (isOpen: boolean) => void;
-  handleOnboardingNextStep: () => void;
-}
-
-const CreateCategory: React.FC<CreateGroupProps> = ({
-  isOpen,
-  setIsOpen,
-  handleOnboardingNextStep,
-}) => {
+const CreateCategory: React.FC = () => {
   const [categoryName, setCategoryName] = useState<string>('');
   const [visibility, setVisibility] = useState<string>('visible-false');
   const { updateEditCategoryData, submitCategoryUpdate } = useCreate();
+  const { data, setCgryModalIsOpen, setOnboardingStep } = useLayout();
 
   const resetData = () => {
     setCategoryName('');
@@ -27,7 +19,7 @@ const CreateCategory: React.FC<CreateGroupProps> = ({
   };
 
   const onClickPrevBtn = () => {
-    setIsOpen(false);
+    setCgryModalIsOpen(false);
     resetData();
   };
 
@@ -37,13 +29,13 @@ const CreateCategory: React.FC<CreateGroupProps> = ({
       visibility: visibility === 'visible-false',
     });
     submitCategoryUpdate(); //생성
-    handleOnboardingNextStep();
-    setIsOpen(false);
+    setOnboardingStep(data.onboardingStep + 1);
+    setCgryModalIsOpen(false);
   };
 
   return (
     <ModalLayout
-      isOpen={isOpen}
+      isOpen={data.cgryModalIsOpen}
       btnOption={{
         lBtnNm: '취소',
         lBtnFn: onClickPrevBtn,
