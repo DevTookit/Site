@@ -8,7 +8,7 @@ const BlogEditor: React.FC = () => {
     if (editorRef.current) {
       const content = editorRef.current.getContent();
       console.log('Content:', content);
-      // 여기에 저장 로직 추가 (API 전송 등)
+      // 저장 로직 (API 전송 등)
     }
   };
 
@@ -23,70 +23,46 @@ const BlogEditor: React.FC = () => {
           height: 600,
           menubar: true,
           plugins: [
-            'advlist autolink lists link image charmap print preview anchor',
+            'advlist autolink lists link image charmap anchor',
             'searchreplace visualblocks code fullscreen',
-            'insertdatetime media table paste code help wordcount',
-            'textcolor colorpicker',
-            'directionality emoticons',
-            'paste code table image media', // image와 media 플러그인 추가
-            'code', // 코드 뷰어
-            'table', // 테이블 기능
-            'charmap', // 문자 모음
-            'fullscreen', // 전체 화면 모드
+            'insertdatetime media table paste wordcount',
+            'textcolor colorpicker directionality emoticons autosave',
+            'pagebreak template codesample toc quickbars',
+            'powerpaste advtable importcss visualchars nonbreaking hr preview print',
           ],
           toolbar:
-            'undo redo | styleselect | bold italic underline | forecolor backcolor | \
-          alignleft aligncenter alignright alignjustify | \
-          bullist numlist outdent indent | link image media | \
-          insertdatetime preview emoticons | removeformat | help | code | \
-          table charmap fullscreen',
+            'undo redo | bold italic underline strikethrough | fontselect fontsizeselect formatselect | \
+            alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | forecolor backcolor removeformat | \
+            link image media | charmap emoticons | fullscreen save print preview | insertfile codesample anchor | \
+            visualblocks code | pagebreak toc',
           content_style:
             'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }',
           external_plugins: {
-            advlist:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/advlist/plugin.min.js',
-            autolink:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/autolink/plugin.min.js',
-            lists:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/lists/plugin.min.js',
-            link: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/link/plugin.min.js',
-            image:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/image/plugin.min.js',
-            charmap:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/charmap/plugin.min.js',
-            print:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/print/plugin.min.js',
-            preview:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/preview/plugin.min.js',
-            anchor:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/anchor/plugin.min.js',
+            advlist: '/assets/js/tinymce/plugins/advlist/plugin.min.js',
+            autolink: '/assets/js/tinymce/plugins/autolink/plugin.min.js',
+            lists: '/assets/js/tinymce/plugins/lists/plugin.min.js',
+            link: '/assets/js/tinymce/plugins/link/plugin.min.js',
+            image: '/assets/js/tinymce/plugins/image/plugin.min.js',
+            charmap: '/assets/js/tinymce/plugins/charmap/plugin.min.js',
             searchreplace:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/searchreplace/plugin.min.js',
+              '/assets/js/tinymce/plugins/searchreplace/plugin.min.js',
             visualblocks:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/visualblocks/plugin.min.js',
-            code: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/code/plugin.min.js',
-            fullscreen:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/fullscreen/plugin.min.js',
+              '/assets/js/tinymce/plugins/visualblocks/plugin.min.js',
+            code: '/assets/js/tinymce/plugins/code/plugin.min.js',
             insertdatetime:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/insertdatetime/plugin.min.js',
-            media:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/media/plugin.min.js',
-            table:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/table/plugin.min.js',
-            paste:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/paste/plugin.min.js',
-            help: 'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/help/plugin.min.js',
-            wordcount:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/wordcount/plugin.min.js',
-            textcolor:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/textcolor/plugin.min.js',
-            colorpicker:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/colorpicker/plugin.min.js',
-            directionality:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/directionality/plugin.min.js',
-            emoticons:
-              'https://cdnjs.cloudflare.com/ajax/libs/tinymce/6.0.0/plugins/emoticons/plugin.min.js',
+              '/assets/js/tinymce/plugins/insertdatetime/plugin.min.js',
+            media: '/assets/js/tinymce/plugins/media/plugin.min.js',
+            wordcount: '/assets/js/tinymce/plugins/wordcount/plugin.min.js',
+            pagebreak: '/assets/js/tinymce/plugins/pagebreak/plugin.min.js',
+            table: '/assets/js/tinymce/plugins/table/plugin.min.js',
+            emoticons: '/assets/js/tinymce/plugins/emoticons/plugin.min.js',
+            codesample: '/assets/js/tinymce/plugins/codesample/plugin.min.js',
+            nonbreaking: '/assets/js/tinymce/plugins/nonbreaking/plugin.min.js',
+            visualchars: '/assets/js/tinymce/plugins/visualchars/plugin.min.js',
+            preview: '/assets/js/tinymce/plugins/preview/plugin.min.js',
+            quickbars: '/assets/js/tinymce/plugins/quickbars/plugin.min.js',
           },
+          script_url: '/assets/js/tinymce/tinymce.min.js',
         }}
       />
       <button
