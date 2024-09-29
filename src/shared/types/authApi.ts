@@ -1,7 +1,6 @@
 //! login
 export type LoginCredentials = {
-  username: string;
-  email: string; // 수정: 'eamil' -> 'email'
+  email: string;
   password: string;
 };
 
@@ -22,7 +21,7 @@ export type TokenResponse = Token; // Assuming the response is similar to Token
 
 //! createUser
 export type CreateUserData = {
-  username: string;
+  name: string;
   email: string;
   password: string;
 };
@@ -47,9 +46,9 @@ export type ConfirmEmailResponse = {
 
 //! updateUserInfo
 export type UpdateUserInfo = {
-  username?: string;
-  email?: string;
-  password?: string;
+  name: string;
+  tags: string[];
+  job: string;
 };
 
 export type UpdateResponse = {
@@ -78,8 +77,10 @@ export type UserResponse = {
 //! getMyInfo
 export type MyInfoResponse = {
   id: number;
-  username: string;
   email: string;
+  name: string;
+  img: string;
+  tags: string[];
 };
 
 //! findUserEmail

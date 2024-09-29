@@ -26,6 +26,10 @@ import {
   SiTailwindcss,
 } from 'react-icons/si';
 import { IconType } from 'react-icons'; // IconType import
+import authApi from '@/shared/\bapi/authApi';
+import useAuthStore from '@/shared/store/authStore';
+import { useNavigate } from 'react-router-dom';
+
 // 스킬 목록 정의
 const predefinedSkills: { name: string; icon: IconType; color: string }[] = [
   { name: 'HTML5', icon: FaHtml5, color: 'text-red-500' },
@@ -53,6 +57,7 @@ const predefinedSkills: { name: string; icon: IconType; color: string }[] = [
   // 필요시 더 많은 기술 추가 가능
 ];
 const Profile = () => {
+  const navigate = useNavigate();
   const [job, setJob] = useState('');
   const [skills, setSkills] = useState<
     { name: string; icon: IconType | undefined; color: string }[]
@@ -120,6 +125,20 @@ const Profile = () => {
         skill.name.toLowerCase().includes(value.toLowerCase()),
       ),
     );
+  };
+
+  const updateUserInfo = async () => {
+    const userInfo = {
+      name: useAuthStore.getState().name ?? '', // 또는 다른 사용자 이름
+      job: job,
+      tags: skills.map((skill) => skill.name), // 스킬 이름을 태그로 변환
+      img: profileImage, // Base64 이미지 문자열
+    };
+    await authApi.updateUserInfo(userInfo).then(async () => {
+      await authApi.getMyInfo().then(() => {
+        navigate('/auth/profile/creation');
+      });
+    });
   };
 
   return (
@@ -231,7 +250,10 @@ const Profile = () => {
             </div>
           </div>
           <div className="flex w-full items-center justify-end">
-            <button className="hover:bg-brand-dark mt-auto h-[58px] w-full rounded-md bg-lighten-100 text-[20px] text-lighten-600">
+            <button
+              className="hover:bg-brand-dark mt-auto h-[58px] w-full rounded-md bg-lighten-100 text-[20px] text-lighten-600"
+              onClick={updateUserInfo}
+            >
               프로필 생성하기
             </button>
           </div>

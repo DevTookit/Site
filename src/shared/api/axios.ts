@@ -3,8 +3,8 @@ import useAuthStore from '../store/authStore';
 
 // Axios 인스턴스 생성
 const api = axios.create({
-  baseURL: 'https://example.com/api',
-  timeout: 3000,
+  baseURL: import.meta.env.VITE_API_BASE_URL,
+  timeout: 30000,
 });
 
 // 요청 시 로그인 토큰을 헤더에 추가하는 인터셉터

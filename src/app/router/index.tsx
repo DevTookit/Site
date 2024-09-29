@@ -3,6 +3,7 @@ import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 // 페이지 컴포넌트 임포트
+import RootPage from '@/pages/Root/index';
 import LoginPage from '@/pages/auth/Login';
 import ProfileSettingsPage from '@/pages/auth/Profile/Settings';
 import PublishPage from '@/pages/Test/Publish';
@@ -21,8 +22,9 @@ const AppRouter: React.FC = () => {
     <div className="min-w-screen relative flex min-h-screen items-center justify-center overflow-y-auto bg-black">
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<PublishPage />} />
+          <Route path="/" element={<RootPage />} />
           <Route path="/auth/login" element={<LoginPage />} />
+          <Route path="/auth/signup" element={<LoginPage />} />
           <Route
             path="/auth/profile/settings"
             element={<ProfileSettingsPage />}

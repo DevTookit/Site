@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 interface ProgressBarProps {
   duration?: number; // 프로그레스 바가 100%까지 도달하는 시간 (ms)
 }
 
 const CreationProgress: React.FC<ProgressBarProps> = ({ duration = 3000 }) => {
+  const navigate = useNavigate();
   const progressRef = useRef<HTMLDivElement>(null);
   const [progressPer, setProgressPer] = useState(0);
   const animationFrameRef = useRef<number | null>(null);
@@ -23,6 +25,10 @@ const CreationProgress: React.FC<ProgressBarProps> = ({ duration = 3000 }) => {
 
       if (nextProgress < 100) {
         animationFrameRef.current = requestAnimationFrame(updateProgress);
+      } else {
+        setTimeout(() => {
+          navigate('/group');
+        }, 1000);
       }
     };
 

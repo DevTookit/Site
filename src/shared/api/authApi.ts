@@ -19,6 +19,36 @@ import {
   VerifyEmailResponse,
 } from '../types/authApi';
 
+//! 유저 생성
+const createUser = async (
+  userData: CreateUserData,
+): Promise<CreateUserResponse> => {
+  const response = await api.post<CreateUserResponse>(
+    '/v1/users/create',
+    userData,
+  );
+  return response.data;
+};
+
+//! 이메일 인증코드 발송
+const getVerifyEmail = async (email: string) => {
+  const response = await api.get<VerifyEmailResponse>(
+    `/v1/users/verify-email?email=${email}`,
+  );
+  return response.data;
+};
+//! 이메일 인증 성공시
+const confirmEmailVerification = async (
+  code: string,
+  email: string,
+): Promise<ConfirmEmailResponse> => {
+  const response = await api.patch<ConfirmEmailResponse>(
+    '/v1/users/verify-email',
+    { code, email },
+  );
+  return response.data;
+};
+
 //! 토큰 발급
 const issueToken = async (): Promise<TokenResponse> => {
   const response = await api.post<TokenResponse>('/v1/users/token');
@@ -34,31 +64,6 @@ const loginUser = async (
     credentials,
   );
   useAuthStore.getState().setToken(response.data.token.accessToken);
-  return response.data;
-};
-
-//! 유저 생성
-const createUser = async (
-  userData: CreateUserData,
-): Promise<CreateUserResponse> => {
-  const response = await api.post<CreateUserResponse>(
-    '/v1/users/create',
-    userData,
-  );
-  return response.data;
-};
-
-//! 이메일 인증
-const verifyEmail = async (): Promise<VerifyEmailResponse> => {
-  const response = await api.get<VerifyEmailResponse>('/v1/users/verify-email');
-  return response.data;
-};
-
-//! 이메일 인증 성공시
-const confirmEmailVerification = async (): Promise<ConfirmEmailResponse> => {
-  const response = await api.patch<ConfirmEmailResponse>(
-    '/v1/users/verify-email',
-  );
   return response.data;
 };
 
@@ -93,6 +98,7 @@ const getUserById = async (userId: string): Promise<UserResponse> => {
 //! 내 정보 조회
 const getMyInfo = async (): Promise<MyInfoResponse> => {
   const response = await api.get<MyInfoResponse>('/v1/users/me');
+  useAuthStore.getState().setUserInfo(response.data);
   return response.data;
 };
 
@@ -107,10 +113,10 @@ const findUserEmail = async (
 };
 
 const authApi = {
+  getVerifyEmail,
   issueToken,
   loginUser,
   createUser,
-  verifyEmail,
   confirmEmailVerification,
   getUserById,
   updateUserInfo,

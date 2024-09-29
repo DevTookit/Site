@@ -1,13 +1,30 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import authApi from '@/shared/\bapi/authApi';
 
 const Login: React.FC = () => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
 
+  const getMyInfo = () => {
+    authApi.getMyInfo().then((res) => {
+      //프로필 세팅 여부
+      if (res.img) navigate('/auth/profile/settings');
+      else navigate('/group');
+    });
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('로그인 시도:', { email, password });
+    authApi
+      .loginUser({ email, password })
+      .then(() => {
+        getMyInfo();
+      })
+      .catch((err) => {
+        console.error(err);
+      });
   };
 
   return (

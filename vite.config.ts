@@ -5,6 +5,15 @@ import svgr from 'vite-plugin-svgr';
 import { resolve } from 'path';
 
 export default defineConfig({
+  server: {
+    proxy: {
+      '/v1': {
+        target: 'http://43.203.218.198:8080',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
   resolve: {
     alias: [
       { find: '@/src', replacement: resolve(__dirname, 'src') },
