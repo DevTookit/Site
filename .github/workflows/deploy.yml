@@ -24,11 +24,6 @@ jobs:
       - name: Build project
         run: |
           echo "Building project..."
-          if [ -z "${{ secrets.VITE_TINY_MCE_API_KEY }}" ]; then
-            echo "VITE_TINY_MCE_API_KEY is not set!"
-          else
-            echo "VITE_TINY_MCE_API_KEY is set."
-          fi
           npm run build
         env:
           VITE_API_BASE_URL: ${{ secrets.VITE_API_BASE_URL }}
