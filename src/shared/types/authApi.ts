@@ -14,6 +14,7 @@ export type LoginResponse = {
   token: Token;
   email: string;
   id: number;
+  isOnBoardingComplete: boolean;
 };
 
 //! token
@@ -24,6 +25,8 @@ export type CreateUserData = {
   name: string;
   email: string;
   password: string;
+  tag?: string[];
+  job?: string;
 };
 
 export type CreateUserResponse = {
@@ -49,6 +52,7 @@ export type UpdateUserInfo = {
   name: string;
   tags: string[];
   job: string;
+  img: string;
 };
 
 export type UpdateResponse = {

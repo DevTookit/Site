@@ -18,14 +18,34 @@ import {
   UserResponse,
   VerifyEmailResponse,
 } from '../types/authApi';
+import { setRefreshToken, setToken } from '../util/tokenUtil';
 
 //! 유저 생성
 const createUser = async (
   userData: CreateUserData,
 ): Promise<CreateUserResponse> => {
+  const formData = new FormData();
+  formData.append(
+    'UserCreateRequest',
+    JSON.stringify({
+      email: userData.email,
+      name: userData.name,
+      password: userData.password,
+      tags: null,
+      job: null,
+    }),
+  );
+  formData.append('img', '');
+
   const response = await api.post<CreateUserResponse>(
     '/v1/users/create',
-    userData,
+    formData,
+    {
+      headers: {
+        Accept: '*/*',
+        'Content-Type': 'multipart/form-data', // 헤더 설정
+      },
+    },
   );
   return response.data;
 };
@@ -43,15 +63,17 @@ const confirmEmailVerification = async (
   email: string,
 ): Promise<ConfirmEmailResponse> => {
   const response = await api.patch<ConfirmEmailResponse>(
-    '/v1/users/verify-email',
-    { code, email },
+    `/v1/users/verify-email?code=${code}&email=${email}`,
   );
   return response.data;
 };
 
 //! 토큰 발급
-const issueToken = async (): Promise<TokenResponse> => {
-  const response = await api.post<TokenResponse>('/v1/users/token');
+const issueToken = async (refreshToken: string): Promise<TokenResponse> => {
+  const response = await api.post<TokenResponse>(
+    '/v1/users/token',
+    refreshToken,
+  );
   return response.data;
 };
 
@@ -63,7 +85,8 @@ const loginUser = async (
     '/v1/users/login',
     credentials,
   );
-  useAuthStore.getState().setToken(response.data.token.accessToken);
+  setToken(response.data.token.accessToken);
+  setRefreshToken(response.data.token.refreshToken);
   return response.data;
 };
 
@@ -71,10 +94,27 @@ const loginUser = async (
 const updateUserInfo = async (
   userInfo: UpdateUserInfo,
 ): Promise<UpdateResponse> => {
+  const formData = new FormData();
+  formData.append(
+    'UserUpdateRequest',
+    JSON.stringify({
+      name: userInfo.name,
+      tags: userInfo.tags,
+      job: userInfo.job,
+    }),
+  );
+  formData.append('img', userInfo.img);
   const response = await api.patch<UpdateResponse>(
     '/v1/users/update',
-    userInfo,
+    formData,
+    {
+      headers: {
+        Accept: '*/*',
+        'Content-Type': 'multipart/form-data', // 헤더 설정
+      },
+    },
   );
+
   return response.data;
 };
 

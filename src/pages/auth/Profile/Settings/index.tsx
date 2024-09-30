@@ -58,6 +58,8 @@ const predefinedSkills: { name: string; icon: IconType; color: string }[] = [
 ];
 const Profile = () => {
   const navigate = useNavigate();
+  const { userEmail, userName } = useAuthStore();
+
   const [job, setJob] = useState('');
   const [skills, setSkills] = useState<
     { name: string; icon: IconType | undefined; color: string }[]
@@ -129,7 +131,7 @@ const Profile = () => {
 
   const updateUserInfo = async () => {
     const userInfo = {
-      name: useAuthStore.getState().name ?? '', // 또는 다른 사용자 이름
+      name: useAuthStore.getState().userName ?? '', // 또는 다른 사용자 이름
       job: job,
       tags: skills.map((skill) => skill.name), // 스킬 이름을 태그로 변환
       img: profileImage, // Base64 이미지 문자열
@@ -177,10 +179,10 @@ const Profile = () => {
               />
             </label>
           </div>
-          <h2 className="mt-4 text-center text-2xl text-lighten-600">우영우</h2>
-          <p className="mb-auto text-center text-lighten-300">
-            Woo0woo@gamil.com
-          </p>
+          <h2 className="mt-4 text-center text-2xl text-lighten-600">
+            {userName}
+          </h2>
+          <p className="mb-auto text-center text-lighten-300">{userEmail}</p>
         </div>
 
         {/* 오른쪽 영역 */}
@@ -188,7 +190,7 @@ const Profile = () => {
           <div className="mb-[80px] flex flex-col">
             <span className="text-[32px] text-lighten-500">DevToolKit</span>
             <span className="text-[20px] text-lighten-400">
-              영우님의 프로필을 완성해주세요!
+              {userName}님의 프로필을 완성해주세요!
             </span>
           </div>
           <div className="flex-1">

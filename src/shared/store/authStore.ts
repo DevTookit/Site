@@ -1,47 +1,76 @@
 // shared/store/authStore.ts
 import { create } from 'zustand';
+import authApi from '../\bapi/authApi';
+import {
+  clearToken,
+  getRefreshToken,
+  getToken,
+  setToken,
+} from '../util/tokenUtil';
 
 interface AuthState {
-  token: string | null;
   id: number | null;
-  email: string | null;
-  name: string | null;
-  img: string | null;
-  tags: string[];
-  setToken: (token: string) => void;
-  clearToken: () => void;
-  setUserInfo: (
-    userInfo: Omit<
-      AuthState,
-      'setToken' | 'token' | 'clearToken' | 'setUserInfo'
-    >,
-  ) => void;
+  userEmail: string | null;
+  userName: string | null;
+  userImg: string | null;
+  userTags: string[];
+  setUserInfo: (userInfo: {
+    id: number;
+    email: string;
+    name: string;
+    img: string;
+    tags: string[];
+  }) => void;
+  fetchUserInfo: () => void; // 사용자 정보를 불러오는 함수
+  clearUserInfo: () => void;
 }
 
 const useAuthStore = create<AuthState>((set) => ({
-  token: null,
   id: null,
-  email: '',
-  name: '',
-  img: '',
-  tags: [],
-  setToken: (token: string) => set({ token }),
-  clearToken: () => set({ token: null }),
+  userEmail: '',
+  userName: '',
+  userImg: '',
+  userTags: [],
+
+  // 사용자 정보를 zustand 상태에 저장
   setUserInfo: (userInfo) =>
     set({
       id: userInfo.id,
-      email: userInfo.email,
-      name: userInfo.name,
-      img: userInfo.img,
-      tags: userInfo.tags,
+      userEmail: userInfo.email,
+      userName: userInfo.name,
+      userImg: userInfo.img,
+      userTags: userInfo.tags,
     }),
+
+  // 페이지 로드시 토큰이 있으면 사용자 정보를 서버에서 불러옴
+  fetchUserInfo: async () => {
+    let token = getToken();
+    const refreshToken = getRefreshToken();
+    console.log(!token && refreshToken);
+    if (!token && refreshToken) {
+      const data = await authApi.issueToken(refreshToken);
+      setToken(data.accessToken);
+    }
+    token = getToken();
+
+    if (token) {
+      try {
+        authApi.getMyInfo();
+      } catch (error) {
+        console.error('Failed to fetch user info', error);
+        // 토큰이 유효하지 않으면 토큰과 사용자 정보를 제거
+        clearToken();
+      }
+    }
+  },
+
   clearUserInfo: () =>
     set({
       id: null,
-      email: '',
-      name: '',
-      img: '',
-      tags: [],
+      userEmail: '',
+      userName: '',
+      userImg: '',
+      userTags: [],
     }),
 }));
 

@@ -41,7 +41,7 @@ const Login: React.FC = () => {
   const getMyInfo = () => {
     authApi.getMyInfo().then((res) => {
       //프로필 세팅 여부
-      if (res.img) navigate('/auth/profile/settings');
+      if (!res.img) navigate('/auth/profile/settings');
       else navigate('/group');
     });
   };

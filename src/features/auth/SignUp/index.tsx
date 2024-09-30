@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import Email from '@svg/icon_email.svg?react';
 import authApi from '@/shared/\bapi/authApi';
+import { useNavigate } from 'react-router-dom';
 
 const SignUp: React.FC = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -25,10 +27,13 @@ const SignUp: React.FC = () => {
   const confirmEmailVerification = () => {
     authApi
       .confirmEmailVerification(code, email)
-      .then(() => {
-        authApi.createUser({ name, email, password });
+      .then((res) => {
+        if (res) {
+          alert('인증되었습니다.');
+          navigate('/auth/login');
+        } else alert('인증에 실패했습니다.');
       })
-      .catch(() => alert('인증실패'));
+      .catch(() => alert('인증에 실패했습니다.'));
   };
   /***
    * !
@@ -62,6 +67,11 @@ const SignUp: React.FC = () => {
   const onClickEmailVerificationStatus = () => {
     if (validateForm()) {
       setFormStatus('codeSent');
+      // authApi
+      //   .createUser({ name, email, password, job: '', tag: [''] })
+      //   .then(() => {
+      //     setFormStatus('codeSent');
+      //   });
     }
   };
 
