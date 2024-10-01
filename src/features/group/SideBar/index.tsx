@@ -9,20 +9,71 @@ import All from '@svg/icon_all.svg?react';
 import useContextMenuStore from '@/shared/store/contextStore';
 import ContextMenu from '@/shared/ui/ContextMenu';
 import CreateFolderModal from '@/features/category/modal/CreateFolder';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import CategoryDropdown from '@/features/category/Dropdown';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
 
-import { Link } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
+import useAuthStore from '@/shared/store/authStore';
+
+/* api */
+import sectionApi from '@/shared/api/sectionApi';
+import groupApi from '@/shared/api/groupApi';
 
 const GroupSideBar: React.FC = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const { userImg, userJob, userName } = useAuthStore();
+  const [groupTab, setGroupTab] = useState(0);
   const [createFolderIsOpen, setCreateFolderIsOpen] = useState(false);
-  const { setCgryModalIsOpen } = useLayout();
-
+  const [options, setOptions] = useState<
+    {
+      label: string;
+      onClick: () => void;
+      className: string;
+    }[]
+  >([]);
+  const {
+    setCgryModalIsOpen,
+    data,
+    setGroupModalIsOpen,
+    setCurrentCategory,
+    setCurrentGroupTab,
+    setCurrentGroup,
+    setCurrentCategoryList,
+    setMyJoinedGroupList,
+    setCurrentRepository,
+  } = useLayout();
   const { x, y, isVisible, showContextMenu, hideContextMenu } =
     useContextMenuStore();
-  const options = [
+
+  const groupContextOptions = [
+    {
+      label: `[${data.currentGroup?.name}]`,
+      onClick: () => {},
+      className: '',
+    },
+    {
+      label: '그룹 수정(미개발)',
+      onClick: () => alert('그룹수정'),
+      className: '',
+    },
+    {
+      label: '그룹 삭제',
+      onClick: () => {
+        if (data.currentGroup?.id && confirm(` 그룹을 삭제하시겠습니까?`)) {
+          groupApi.deleteGroup(data.currentGroup.id).then(() => {
+            groupApi.getMyJoinedGroupList().then((res) => {
+              setMyJoinedGroupList(res);
+            });
+          });
+        }
+      },
+      className: '',
+    },
+  ];
+  const categoryContextOptions = [
     {
       label: '카테고리 편집',
       onClick: () => setCgryModalIsOpen(true),
@@ -40,10 +91,57 @@ const GroupSideBar: React.FC = () => {
     },
     {
       label: '카테고리 삭제',
-      onClick: () => alert('카테고리 삭제'),
+      onClick: () => {
+        if (
+          data.currentCategory?.folderId &&
+          confirm(
+            `${data.currentCategory?.name}(${data.currentCategory.type})를 삭제하시겠습니까?`,
+          )
+        )
+          sectionApi.deleteSection(data.currentCategory?.folderId).then(() => {
+            onClickGroupTab(groupTab);
+          });
+      },
       className: 'text-error',
     },
   ];
+
+  const getSections = async (groupId: number) => {
+    await sectionApi.getSections(groupId).then(async (res) => {
+      setCurrentCategoryList(res);
+
+      if (res.length === 0) {
+        await sectionApi.createSection({
+          groupId: groupId,
+          name: '임시 카테고리',
+          isPublic: true,
+          parentSectionId: null,
+          type: 'MENU',
+        });
+        await getSections(groupId);
+      }
+    });
+  };
+
+  const onClickGroupTab = async (tab: number) => {
+    const groupId = data.myJoinedGroupList[tab].id;
+    setCurrentGroupTab(data.myJoinedGroupList[tab]);
+    setGroupTab(tab);
+    await getSections(groupId);
+    navigate('/group');
+  };
+
+  useEffect(() => {
+    if (data.myJoinedGroupList.length > 0) onClickGroupTab(0);
+    setOptions(categoryContextOptions);
+  }, [data.myJoinedGroupList]);
+
+  useEffect(() => {
+    console.log(location);
+    if (location.pathname === '/group') {
+      setCurrentRepository(null);
+    }
+  }, [location]);
 
   return (
     <>
@@ -64,20 +162,44 @@ const GroupSideBar: React.FC = () => {
         </div>
         <div className="mb-5 flex items-center rounded-md bg-primary p-[10px]">
           <img
-            src="/assets/img/login_developer.jpg"
+            src={userImg ?? ''}
             alt="User Profile"
             className="mr-3 h-10 w-10 rounded-full"
           />
           <div className="flex-1">
-            <p className="text-[10px] text-lighten-400">채널 관리자</p>
-            <p className="text-xl font-medium text-[#D2D3D3]">우영우</p>
+            <p className="text-[10px] text-lighten-400">{userJob}</p>
+            <p className="text-xl font-medium text-[#D2D3D3]">{userName}</p>
           </div>
           <button>
             <Edit className="h-5 w-5" />
           </button>
         </div>
         <div className="mb-[35px] flex gap-1">
-          <button className="">
+          {data.myJoinedGroupList.map((el, idx) => {
+            return (
+              <button
+                key={`myjoingroup_${idx}`}
+                className=""
+                onClick={() => onClickGroupTab(idx)}
+                onContextMenu={(e) => {
+                  setOptions(groupContextOptions);
+                  e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
+                  e.stopPropagation(); // 이벤트 전파 방지
+                  setCurrentGroup(el); //카테고리 선택
+                  showContextMenu(e.clientX, e.clientY);
+                }}
+              >
+                <img
+                  src={el.img}
+                  className={`h-10 w-10 rounded-full border-4 ${groupTab === idx && 'border-brand'}`}
+                />
+              </button>
+            );
+          })}
+          <button
+            className="cursor-pointer"
+            onClick={() => setGroupModalIsOpen(true)}
+          >
             <AddCircle className="h-10 w-10" />
           </button>
           <button className="">
@@ -87,7 +209,12 @@ const GroupSideBar: React.FC = () => {
         {/* Category List */}
         <div className="mb-2 flex justify-between">
           <p className="text-lg font-medium text-[#B4B5B5]">category</p>
-          <button onClick={() => setCgryModalIsOpen(true)}>
+          <button
+            onClick={() => {
+              setCurrentCategory(null);
+              setCgryModalIsOpen(true);
+            }}
+          >
             <Add />
           </button>
         </div>
@@ -99,52 +226,126 @@ const GroupSideBar: React.FC = () => {
                 전체보기
               </span>
             </li>
-            {[1, 2, 3].map(() => {
-              return (
-                <CategoryDropdown
-                  title={'임시 카테고리'}
-                  onContextMenu={(e) => {
-                    e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
-                    e.stopPropagation(); // 이벤트 전파 방지
-                    showContextMenu(e.clientX, e.clientY);
-                  }}
-                >
+            {data.currentCategoryList.length &&
+              data.currentCategoryList.map((el, idx) => {
+                return (
                   <CategoryDropdown
-                    title={'임시 카테고리'}
+                    key={`category_${idx}`}
+                    title={el.name}
+                    folderId={el.folderId}
                     onContextMenu={(e) => {
+                      setOptions(categoryContextOptions);
                       e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
                       e.stopPropagation(); // 이벤트 전파 방지
+                      setCurrentCategory(el); //카테고리 선택
                       showContextMenu(e.clientX, e.clientY);
                     }}
                   >
-                    <CategoryDropdown
-                      title={'임시 카테고리'}
-                      onContextMenu={(e) => {
-                        e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
-                        e.stopPropagation(); // 이벤트 전파 방지
-                        showContextMenu(e.clientX, e.clientY);
-                      }}
-                    >
-                      <Link
-                        to="/group/list"
-                        className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2"
-                      >
-                        <FolderRounded className="mr-[10px]" />
-                        <span
-                          className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]"
-                          title={'안녕하세요'}
+                    {data.currentCategoryChildList['2depth']?.[
+                      el.folderId
+                    ]?.map((el2, idx) => {
+                      return el2.type === 'MENU' ? (
+                        <CategoryDropdown
+                          key={`category2_${idx}`}
+                          title={el2.name}
+                          folderId={el2.folderId}
+                          onContextMenu={(e) => {
+                            setOptions(categoryContextOptions);
+                            e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
+                            e.stopPropagation(); // 이벤트 전파 방지
+                            setCurrentCategory(el2); //카테고리 선택
+                            showContextMenu(e.clientX, e.clientY);
+                          }}
                         >
-                          {'안녕하세요'}
-                        </span>
-                      </Link>
-                    </CategoryDropdown>
+                          {data.currentCategoryChildList['3depth']?.[
+                            el2.folderId
+                          ]?.map((el3, idx) => {
+                            return el3.type === 'MENU' ? (
+                              <CategoryDropdown
+                                key={`category3_${idx}`}
+                                title={el3.name}
+                                folderId={el3.folderId}
+                                onContextMenu={(e) => {
+                                  setOptions(categoryContextOptions);
+                                  e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
+                                  e.stopPropagation(); // 이벤트 전파 방지
+                                  setCurrentCategory(el3); //카테고리 선택
+                                  showContextMenu(e.clientX, e.clientY);
+                                }}
+                              >
+                                {data.currentCategoryChildList['4depth']?.[
+                                  el3.folderId
+                                ]?.map((el4, idx) => {
+                                  return (
+                                    <Link
+                                      key={`repository_${idx}`}
+                                      to="/group/list"
+                                      className={`relative flex h-10 w-full cursor-pointer rounded-lg p-2 ${data.currentRepository?.folderId === el4.folderId ? 'bg-lighten-100' : 'bg-primary'}`}
+                                      onClick={() =>
+                                        setCurrentRepository({
+                                          folderId: el4.folderId,
+                                          name: el4.name,
+                                          depth1: el.name,
+                                          depth2: el2.name,
+                                          depth3: el3.name,
+                                        })
+                                      }
+                                    >
+                                      <FolderRounded className="mr-[10px]" />
+                                      <span
+                                        className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]"
+                                        title={el4.name}
+                                      >
+                                        {el4.name}
+                                      </span>
+                                    </Link>
+                                  );
+                                })}
+                              </CategoryDropdown>
+                            ) : (
+                              <Link
+                                key={`repository_${idx}`}
+                                to="/group/list"
+                                className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2"
+                              >
+                                <FolderRounded className="mr-[10px]" />
+                                <span
+                                  className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]"
+                                  title={el3.name}
+                                >
+                                  {el3.name}
+                                </span>
+                              </Link>
+                            );
+                          })}
+                        </CategoryDropdown>
+                      ) : (
+                        <Link
+                          to="/group/list"
+                          className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2"
+                        >
+                          <FolderRounded className="mr-[10px]" />
+                          <span
+                            className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]"
+                            title={el2.name}
+                          >
+                            {el2.name}
+                          </span>
+                        </Link>
+                      );
+                    })}
                   </CategoryDropdown>
-                </CategoryDropdown>
-              );
-            })}
+                );
+              })}
           </ul>
         </div>
-        <ContextMenu x={x} y={y} isVisible={isVisible} options={options} />
+        <ContextMenu
+          x={x}
+          y={y}
+          isVisible={isVisible}
+          options={options}
+          hideContextMenu={hideContextMenu}
+        />
       </aside>
     </>
   );

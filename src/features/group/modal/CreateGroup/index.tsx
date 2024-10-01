@@ -45,13 +45,17 @@ const CreateGroup: React.FC = () => {
 
   const onClickNextBtn = () => {
     if (step === 1) {
-      updateCreateGroupData({ image, groupName });
+      const fileInput: any = document.getElementById('groupImageUpload');
+      updateCreateGroupData({ image: fileInput.files[0], groupName });
       setStep(step + 1);
     } else {
       updateCreateGroupData({ visibility });
       submitGroupCreate(); //생성
-      setOnboardingStep(data.onboardingStep + 1); //유저정보에서 온보딩 여부 X일 때
+      if (data.onboardingStep === 1) {
+        setOnboardingStep(data.onboardingStep + 1); //유저정보에서 온보딩 여부 X일 때
+      }
       setGroupModalIsOpen(false);
+      resetData();
     }
   };
 

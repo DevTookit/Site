@@ -4,7 +4,8 @@ import CreateSubFolderContent from '@/shared/ui/modalContent/folder/Create';
 /* lifecicle */
 import { useState } from 'react';
 /* hook */
-import useCreate from '@/shared/hooks/useCreate';
+import sectionApi from '@/shared/api/sectionApi';
+import useLayout from '@/shared/hooks/useLayout';
 
 interface CreateFolderProps {
   isOpen: boolean;
@@ -13,12 +14,12 @@ interface CreateFolderProps {
 
 const CreateFolder: React.FC<CreateFolderProps> = ({ isOpen, setIsOpen }) => {
   const [folderName, setFolderName] = useState<string>('');
-  const [folderOption, setFolderOption] = useState<string>('category');
-  const { updateCreateSubFolder, submitSubFolderUpdate } = useCreate();
+  const [folderOption, setFolderOption] = useState<string>('MENU');
+  const { data, setCurrentCategoryChildList, setOnboardingStep } = useLayout();
 
   const resetData = () => {
     setFolderName('');
-    setFolderOption('category');
+    setFolderOption('MENU');
   };
 
   const onClickCloseBtn = () => {
@@ -26,13 +27,30 @@ const CreateFolder: React.FC<CreateFolderProps> = ({ isOpen, setIsOpen }) => {
     resetData();
   };
 
-  const onClickSaveBtn = () => {
-    updateCreateSubFolder({
-      folderName,
-      folderOption,
-    });
-    submitSubFolderUpdate(); //생성
-    setIsOpen(false);
+  const onClickSaveBtn = async () => {
+    await sectionApi
+      .createSection({
+        groupId: data.currentGroupTab?.id ?? 0,
+        name: folderName,
+        isPublic: false,
+        parentSectionId: data.currentCategory?.folderId ?? 0,
+        type: folderOption,
+      })
+      .then(() => {
+        if (data.onboardingStep === 2) setOnboardingStep(3);
+        sectionApi
+          .getSections(
+            data.currentGroupTab?.id ?? 0,
+            data.currentCategory?.folderId ?? 0,
+          )
+          .then((res) => {
+            setCurrentCategoryChildList(
+              data.currentCategory?.folderId ?? 0,
+              res,
+            );
+          });
+        setIsOpen(false);
+      });
   };
 
   return (

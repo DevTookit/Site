@@ -30,7 +30,7 @@ const CreateGroupStep1: React.FC<CreateGroupStep1rops> = ({
         <label className="absolute bottom-4 right-4 flex h-12 w-12 items-center justify-center rounded-full bg-primary">
           <AddPhotoRounded />
           <input
-            id="profileImageUpload"
+            id="groupImageUpload"
             type="file"
             accept="image/*"
             className="hidden"

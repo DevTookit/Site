@@ -9,7 +9,8 @@ import PublishPage from '@/pages/Test/Publish';
 import CreationProgress from '@/pages/auth/Profile/CreationProgress';
 import Group from '@/pages/Group';
 import GroupList from '@/pages/Group/List';
-import GroupPostCreate from '@/pages/Group/post/Create';
+import GroupBoardCreate from '@/pages/Group/board/Create';
+import GroupCodeCreate from '@/pages/Group/code/Create';
 import GroupLayout from '../layouts/groupLayout';
 //provider
 import { CreateProvider } from '../providers/CreateProvider';
@@ -91,7 +92,19 @@ const AppRouter: React.FC = () => {
             <LayoutProvider>
               <CreateProvider>
                 <GroupLayout>
-                  <GroupPostCreate />
+                  <GroupBoardCreate />
+                </GroupLayout>
+              </CreateProvider>
+            </LayoutProvider>
+          }
+        />
+        <Route
+          path="/group/code/create"
+          element={
+            <LayoutProvider>
+              <CreateProvider>
+                <GroupLayout>
+                  <GroupCodeCreate />
                 </GroupLayout>
               </CreateProvider>
             </LayoutProvider>

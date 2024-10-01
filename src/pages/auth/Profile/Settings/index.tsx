@@ -26,7 +26,7 @@ import {
   SiTailwindcss,
 } from 'react-icons/si';
 import { IconType } from 'react-icons'; // IconType import
-import authApi from '@/shared/\bapi/authApi';
+import authApi from '@/shared/api/authApi';
 import useAuthStore from '@/shared/store/authStore';
 import { useNavigate } from 'react-router-dom';
 

@@ -17,7 +17,7 @@ import {
   UpdateUserInfo,
   UserResponse,
   VerifyEmailResponse,
-} from '../types/authApi';
+} from '../types/authType';
 import { setRefreshToken, setToken } from '../util/tokenUtil';
 
 //! 유저 생성
@@ -73,6 +73,13 @@ const issueToken = async (refreshToken: string): Promise<TokenResponse> => {
   const response = await api.post<TokenResponse>(
     '/v1/users/token',
     refreshToken,
+    {
+      headers: {
+        Accept: '*/*',
+        'Content-Type': 'application/json', // 헤더 설정
+        Authorization: `Bearer ${refreshToken}`,
+      },
+    },
   );
   return response.data;
 };
@@ -85,15 +92,21 @@ const loginUser = async (
     '/v1/users/login',
     credentials,
   );
+  useAuthStore
+    .getState()
+    .setOnBoardingComplete(response.data.isOnBoardingComplete);
   setToken(response.data.token.accessToken);
   setRefreshToken(response.data.token.refreshToken);
   return response.data;
 };
 
-//! 내 정보 수정
+//! 내 정보 수정 profile_create_img_id
 const updateUserInfo = async (
   userInfo: UpdateUserInfo,
 ): Promise<UpdateResponse> => {
+  const fileInput: any = document.getElementById('profileImageUpload');
+  const file = fileInput.files[0];
+
   const formData = new FormData();
   formData.append(
     'UserUpdateRequest',
@@ -103,7 +116,7 @@ const updateUserInfo = async (
       job: userInfo.job,
     }),
   );
-  formData.append('img', userInfo.img);
+  formData.append('img', file);
   const response = await api.patch<UpdateResponse>(
     '/v1/users/update',
     formData,

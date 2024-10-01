@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import Email from '@svg/icon_email.svg?react';
-import authApi from '@/shared/\bapi/authApi';
+import authApi from '@/shared/api/authApi';
 import { useNavigate } from 'react-router-dom';
 
 const SignUp: React.FC = () => {

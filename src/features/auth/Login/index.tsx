@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import authApi from '@/shared/\bapi/authApi';
+import authApi from '@/shared/api/authApi';
 
 const Login: React.FC = () => {
   const navigate = useNavigate();

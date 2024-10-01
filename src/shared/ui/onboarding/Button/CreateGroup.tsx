@@ -9,7 +9,7 @@ interface ButtonProps {
 const CreateGroupBtn: React.FC<ButtonProps> = ({ state, onClickFn }) => {
   return (
     <button
-      className={`flex h-20 w-[440px] items-center justify-start rounded-lg bg-primary p-4 hover:bg-gray-600 ${state === 'active' && 'shadow-onboarding-btn border-[1px] border-solid border-brand'}`}
+      className={`flex h-20 w-[440px] items-center justify-start rounded-lg border-[1px] border-solid bg-primary p-4 hover:bg-gray-600 ${state === 'active' ? 'border-brand shadow-onboarding-btn' : 'border-lighten-100'}`}
       onClick={() => state === 'active' && onClickFn()}
     >
       <GroupAddRounded className="mr-5 h-10 w-10" />

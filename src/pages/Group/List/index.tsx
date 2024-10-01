@@ -1,19 +1,58 @@
+/* svg */
+import TypeCode from '@svg/icon_type_code.svg?react';
+import TypeBoard from '@svg/icon_type_board.svg?react';
+import TypeFolder from '@svg/icon_type_folder.svg?react';
+import Bookmark from '@svg/icon_bookmark.svg?react';
+// import BookmarkOn from '@svg/icon_bookmark_on.svg?react';
+import { format } from 'date-fns';
+
 /* component */
 import Breadcrumb from '@/shared/ui/group/BreadCrumb';
 import UploadButton from '@/shared/ui/group/button/upload';
 import ShowEmptyFile from '@/shared/ui/group/EmptyFile';
 import CreateFileModal from '@/features/group/modal/CreateFile';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import useLayout from '@/shared/hooks/useLayout';
+import contentApi from '@/shared/api/contentApi';
+import { ContentResponse } from '@/shared/types/contentType';
 
 /* hook */
 
 const GroupList: React.FC = () => {
+  const { data } = useLayout();
+  const [tab, setTab] = useState<'CODE' | 'BOARD' | 'FILE' | ''>('');
   const [fileModalisOpen, setFileModalisOpen] = useState(false);
-  const [list, setList] = useState<number[]>([]);
+  const [list, setList] = useState<ContentResponse[]>([]);
 
-  const notEmpty = () => {
-    setList([1, 2, 3]);
+  const onHandleTabBg = (tabIdx: number) => {
+    const tabTypeIndex = {
+      '': 0,
+      FILE: 1,
+      CODE: 2,
+      BOARD: 3,
+    };
+    const bgs = [
+      'bg-lighten-100',
+      'bg-darken-100',
+      'bg-darken-200',
+      'bg-darken-300',
+    ];
+    return bgs[Math.abs(tabIdx - tabTypeIndex[tab])];
   };
+
+  const onClickTab = (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
+    setTab(tab);
+    contentApi.searchContent(data.currentGroupTab?.id ?? 0, tab).then((res) => {
+      setList(res);
+    });
+  };
+
+  useEffect(() => {
+    contentApi.searchContent(data.currentGroupTab?.id ?? 0, '').then((res) => {
+      setList(res);
+    });
+  }, []);
+
   return (
     <>
       <CreateFileModal
@@ -22,48 +61,138 @@ const GroupList: React.FC = () => {
       />
       <div className="flex w-full flex-1 flex-col">
         <div className="mb-1 mt-6 flex justify-start">
-          <Breadcrumb items={['CSS', 'Animation', 'Modal']} />
-          <button
-            className="ml-10 flex h-10 items-center rounded-lg bg-black p-4 text-white"
-            onClick={notEmpty}
-          >
-            notEmpty(누르면 리스트 노출)
-          </button>
+          <Breadcrumb
+            items={
+              (data.currentRepository?.depth1 ?? '') +
+              '|' +
+              (data.currentRepository?.depth2 ?? '') +
+              '|' +
+              (data.currentRepository?.depth3 ?? '')
+            }
+          />
         </div>
-        <h4 className="text-[32px] font-bold text-lighten-500">{'Modal'}</h4>
+        <h4 className="text-[32px] font-bold text-lighten-500">
+          {data.currentRepository?.name}
+        </h4>
         <div className="mb-[6px] mt-6 flex justify-between">
           <UploadButton onClickFn={() => setFileModalisOpen(true)} />
         </div>
         <div className="flex flex-1 items-center justify-center">
-          {list.length === 0 ? (
-            <ShowEmptyFile />
-          ) : (
-            <div className="mt-3 flex h-full w-full flex-col items-start">
-              <ul className="flex">
-                <li className="flex h-[42px] w-[124px] items-center justify-center rounded-t-xl bg-[#D9D9D9] text-lg font-bold text-lighten-400">
-                  전체
-                </li>
-                <li className="flex h-[42px] w-[124px] items-center justify-center rounded-tr-xl bg-darken-100 text-lg font-bold text-lighten-400">
-                  폴더
-                </li>
-                <li className="flex h-[42px] w-[124px] items-center justify-center rounded-tr-xl bg-darken-200 text-lg font-bold text-lighten-400">
-                  코드
-                </li>
-                <li className="flex h-[42px] w-[124px] items-center justify-center rounded-tr-xl bg-darken-300 text-lg font-bold text-lighten-400">
-                  게시판
-                </li>
+          <div className="mt-3 flex h-full w-full flex-col items-start">
+            <ul className="flex">
+              <li
+                onClick={() => onClickTab('')}
+                className={`flex h-[42px] w-[124px] cursor-pointer items-center justify-center rounded-t-xl text-lg font-bold text-lighten-400 ${onHandleTabBg(0)}`}
+              >
+                전체
+              </li>
+              <li
+                onClick={() => onClickTab('FILE')}
+                className={`flex h-[42px] w-[124px] cursor-pointer items-center justify-center rounded-t-xl text-lg font-bold text-lighten-400 ${onHandleTabBg(1)}`}
+              >
+                폴더
+              </li>
+              <li
+                onClick={() => onClickTab('CODE')}
+                className={`flex h-[42px] w-[124px] cursor-pointer items-center justify-center rounded-t-xl text-lg font-bold text-lighten-400 ${onHandleTabBg(2)}`}
+              >
+                코드
+              </li>
+              <li
+                onClick={() => onClickTab('BOARD')}
+                className={`flex h-[42px] w-[124px] cursor-pointer items-center justify-center rounded-t-xl text-lg font-bold text-lighten-400 ${onHandleTabBg(3)}`}
+              >
+                게시판
+              </li>
+            </ul>
+            <ul className="flex min-h-12 w-full bg-lighten-100">
+              <li className="flex w-12 flex-shrink-0 items-center justify-center">
+                <input
+                  type="checkbox"
+                  className="h-[17px] w-[17px] bg-lighten-500"
+                />
+              </li>
+              <li className="flex flex-1 items-center justify-center text-lighten-400">
+                유형
+              </li>
+              <li className="flex flex-[3] items-center justify-center text-lighten-400">
+                제목
+              </li>
+              <li className="flex flex-1 items-center justify-center text-lighten-400">
+                스킬
+              </li>
+              <li className="flex flex-1 items-center justify-center text-lighten-400">
+                작성자
+              </li>
+              <li className="flex flex-1 items-center justify-center text-lighten-400">
+                업로드
+              </li>
+              <li className="flex flex-1 items-center justify-center text-lighten-400">
+                용량
+              </li>
+              <li className="flex w-20 items-center justify-center text-lighten-400">
+                북마크
+              </li>
+            </ul>
+            {list.length === 0 ? (
+              <div className="flex h-full w-full items-center justify-center">
+                <ShowEmptyFile />
+              </div>
+            ) : (
+              <ul className="w-full">
+                {list.map((el, idx) => {
+                  return (
+                    <li
+                      key={`list_${idx}`}
+                      className="h-16 w-full border border-lighten-100"
+                    >
+                      <ul className="flex h-full">
+                        <li className="flex w-12 flex-shrink-0 items-center justify-center">
+                          <input
+                            type="checkbox"
+                            className="h-[17px] w-[17px] bg-lighten-500"
+                          />
+                        </li>
+                        <li className="flex flex-1 items-center justify-center text-lighten-400">
+                          {el.type === 'BOARD' ? (
+                            <TypeBoard />
+                          ) : el.type === 'CODE' ? (
+                            <TypeCode />
+                          ) : el.type === 'FILE' ? (
+                            <TypeFolder />
+                          ) : (
+                            <></>
+                          )}
+                        </li>
+                        <li className="flex flex-[3] items-center justify-start text-lg font-bold text-lighten-500">
+                          {el.name}
+                        </li>
+                        <li className="flex flex-1 items-center justify-center text-lighten-400">
+                          유형
+                        </li>
+                        <li className="flex flex-1 items-center justify-center text-lighten-400">
+                          <img
+                            src={el.writerImg}
+                            className="mr-2 h-6 w-6 rounded-full border-2 border-lighten-500"
+                          />
+                          {el.writerName}
+                        </li>
+                        <li className="flex flex-1 items-center justify-center text-lighten-400">
+                          {format(new Date(el.createdDate), 'yyyy.mm.dd')}
+                        </li>
+                        <li className="flex flex-1 items-center justify-center text-lighten-400">
+                          {el.size}
+                        </li>
+                        <li className="flex w-20 items-center justify-center text-lighten-400">
+                          <Bookmark />
+                        </li>
+                      </ul>
+                    </li>
+                  );
+                })}
               </ul>
-              <ul>
-                <li></li>
-                <li>유형</li>
-                <li>제목</li>
-                <li>작성자</li>
-                <li>업로드</li>
-                <li>용량</li>
-                <li>북마크</li>
-              </ul>
-            </div>
-          )}
+            )}
+          </div>
         </div>
       </div>
     </>

@@ -21,7 +21,7 @@ const ModalLayout: React.FC<ModalLayoutProps> = ({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-primary bg-opacity-50"
+      className="fixed inset-0 z-50 flex h-full w-full items-center justify-center bg-[#000000] bg-opacity-[68%]"
       onClick={btnOption.closeFn}
     >
       <div

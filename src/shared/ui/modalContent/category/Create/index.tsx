@@ -1,12 +1,14 @@
 import RadioGroup from '@/shared/ui/Radio';
 
 interface CreateGroupStep1rops {
+  categoryName: string;
   setCategoryName: (categoryName: string) => void;
   visibility: string;
   setVisibility: (visibility: string) => void;
 }
 
 const CreateCategory: React.FC<CreateGroupStep1rops> = ({
+  categoryName,
   setCategoryName,
   visibility,
   setVisibility,
@@ -24,6 +26,7 @@ const CreateCategory: React.FC<CreateGroupStep1rops> = ({
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setCategoryName(e.target.value)
         }
+        value={categoryName}
         placeholder="카테고리 이름을 설정해주세요."
         className="mb-5 h-12 w-full rounded-md border-2 border-solid border-lighten-100 bg-lighten-100 p-4 text-lg text-lighten-500 placeholder:text-base placeholder:text-lighten-300"
       />

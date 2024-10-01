@@ -1,6 +1,6 @@
 // shared/store/authStore.ts
 import { create } from 'zustand';
-import authApi from '../\bapi/authApi';
+import authApi from '../api/authApi';
 import {
   clearToken,
   getRefreshToken,
@@ -13,13 +13,17 @@ interface AuthState {
   userEmail: string | null;
   userName: string | null;
   userImg: string | null;
+  userJob: string | null;
   userTags: string[];
+  isOnBoardingComplete: boolean;
+  setOnBoardingComplete: (bool: boolean) => void;
   setUserInfo: (userInfo: {
     id: number;
     email: string;
     name: string;
     img: string;
     tags: string[];
+    job: string;
   }) => void;
   fetchUserInfo: () => void; // 사용자 정보를 불러오는 함수
   clearUserInfo: () => void;
@@ -30,8 +34,11 @@ const useAuthStore = create<AuthState>((set) => ({
   userEmail: '',
   userName: '',
   userImg: '',
+  userJob: '',
   userTags: [],
+  isOnBoardingComplete: false,
 
+  setOnBoardingComplete: (bool: boolean) => set({ isOnBoardingComplete: bool }),
   // 사용자 정보를 zustand 상태에 저장
   setUserInfo: (userInfo) =>
     set({
@@ -39,6 +46,7 @@ const useAuthStore = create<AuthState>((set) => ({
       userEmail: userInfo.email,
       userName: userInfo.name,
       userImg: userInfo.img,
+      userJob: userInfo.job,
       userTags: userInfo.tags,
     }),
 

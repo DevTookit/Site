@@ -59,3 +59,27 @@ select {
 :focus {
   outline: none;
 }
+/* 
+.tox,
+.tox .tox-editor-container,
+.tox .tox-toolbar-overlord,
+.tox .tox-toolbar,
+.tox .tox-menubar,
+.tox .tox-toolbar__primary {
+  background-color: #3c3e40 !important;
+  border-color: #2c2a31 !important;
+}
+.tox .tox-editor-header {
+  background-color: #17161a !important;
+  border-color: #2c2a31 !important;
+}
+.tox .tox-sidebar__nav {
+  background-color: #17161a !important;
+  border-color: #2c2a31 !important;
+}
+.tox .tox-tbtn {
+  color: #f1f1f1 !important;
+}
+.tox .tox .tox-tbtn:hover {
+  background-color: #2c2a31 !important;
+} */

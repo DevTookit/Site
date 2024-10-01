@@ -1,18 +1,23 @@
 import React, { useState } from 'react';
 import ArrowDownRounded from '@svg/icon_arrow_chevron_down_rounded.svg?react';
 import Layer from '@svg/icon_layer.svg?react';
+import useLayout from '@/shared/hooks/useLayout';
+import sectionApi from '@/shared/api/sectionApi';
 
 type DropdownProps = {
   children: React.ReactNode;
   title: string;
+  folderId: number;
   onContextMenu: (e: any) => void;
 };
 
 const CategoryDropdown: React.FC<DropdownProps> = ({
   children,
   title,
+  folderId,
   onContextMenu,
 }) => {
+  const { data, setCurrentCategoryChildList } = useLayout();
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleDropdown = <T extends HTMLElement>(e: React.MouseEvent<T>) => {
@@ -21,12 +26,21 @@ const CategoryDropdown: React.FC<DropdownProps> = ({
     setIsOpen(!isOpen);
   };
 
+  const getChildList = <T extends HTMLElement>(e: React.MouseEvent<T>) => {
+    sectionApi
+      .getSections(data.currentGroupTab?.id ?? 0, folderId)
+      .then((res) => {
+        setCurrentCategoryChildList(folderId, res);
+        toggleDropdown(e);
+      });
+  };
+
   return (
     <>
       <li onContextMenu={onContextMenu} className="mb-2">
         <div
-          className="flex h-10 cursor-pointer rounded-lg bg-primary p-2"
-          onClick={toggleDropdown}
+          className={`flex h-10 cursor-pointer rounded-lg p-2 ${data.currentCategory?.folderId === folderId ? 'bg-lighten-100' : 'bg-primary'}`}
+          onClick={getChildList}
         >
           <div className="flex flex-1 items-center overflow-hidden">
             <Layer className="mr-[10px] min-w-6" />
@@ -47,7 +61,7 @@ const CategoryDropdown: React.FC<DropdownProps> = ({
         </div>
         <div
           className={`w-full pl-6 transition-all duration-300 ${
-            isOpen ? 'max-h-40 opacity-100' : 'max-h-0 opacity-0'
+            isOpen ? 'opacity-100' : 'max-h-0 opacity-0'
           } overflow-hidden`}
         >
           <div className="mt-1 rounded-md shadow-lg">{children}</div>

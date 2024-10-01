@@ -33,18 +33,18 @@ const CreateCategory: React.FC<CreateGroupStep1rops> = ({
       <RadioGroup className="mb-10 flex flex-col gap-2">
         <RadioGroup.Button
           name="visibleYn"
-          id="category"
+          id="MENU"
           label="카테고리 기능"
           dscr="폴더를 분류할 수 있는 카테고리 역할입니다."
-          isSelected={folderOption === 'category'}
+          isSelected={folderOption === 'MENU'}
           onChange={setFolderOption}
         />
         <RadioGroup.Button
           name="visibleYn"
-          id="folder"
+          id="REPOSITORY"
           label="폴더 기능"
           dscr="파일과 코드를 저장 할 수 있는 저장소 역할입니다."
-          isSelected={folderOption === 'folder'}
+          isSelected={folderOption === 'REPOSITORY'}
           onChange={setFolderOption}
         />
       </RadioGroup>

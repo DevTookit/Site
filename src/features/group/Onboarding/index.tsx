@@ -6,9 +6,10 @@ import ExplorePageBtn from '@/shared/ui/onboarding/Button/ExplorePage';
 import useContextMenuStore from '@/shared/store/contextStore';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
+import { useEffect } from 'react';
 
 const GroupOnboarding: React.FC = () => {
-  const { data, setGroupModalIsOpen } = useLayout();
+  const { data, setGroupModalIsOpen, setOnboardingStep } = useLayout();
   const { showContextMenu } = useContextMenuStore();
 
   const getOnboardingStepStatus = (
@@ -19,6 +20,13 @@ const GroupOnboarding: React.FC = () => {
     else return '';
   };
 
+  useEffect(() => {
+    let step = 1;
+    if (data.myJoinedGroupList.length > 0) step++;
+
+    setOnboardingStep(step);
+  }, []);
+
   return (
     <div className="space-y-[10px]">
       <CreateGroupBtn
@@ -27,7 +35,7 @@ const GroupOnboarding: React.FC = () => {
       />
       <EditCategoryBtn
         state={getOnboardingStepStatus(2)}
-        onClickFn={() => showContextMenu(242, 270)}
+        onClickFn={() => showContextMenu(242, 318)}
       />
       <WritePostBtn state={getOnboardingStepStatus(3)} onClickFn={() => {}} />
       <ExplorePageBtn state={getOnboardingStepStatus(4)} onClickFn={() => {}} />

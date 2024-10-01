@@ -10,7 +10,7 @@ const REFRESH_TOKEN_KEY = 'refreshToken';
  * @param {string} token - 설정할 토큰
  * @param {number} days - 만료일 (일 수)
  */
-export const setToken = (token: string, days: number = 1 / 96) => {
+export const setToken = (token: string, days: number = 1 / 48) => {
   setCookie(TOKEN_KEY, token, days);
 };
 

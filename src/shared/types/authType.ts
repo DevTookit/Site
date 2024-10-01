@@ -85,6 +85,7 @@ export type MyInfoResponse = {
   name: string;
   img: string;
   tags: string[];
+  job: string;
 };
 
 //! findUserEmail

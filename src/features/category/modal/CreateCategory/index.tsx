@@ -2,16 +2,15 @@
 import ModalLayout from '@/shared/ui/layouts/Modal';
 import CreateCategoryContent from '@/shared/ui/modalContent/category/Create';
 /* lifecicle */
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 /* hook */
-import useCreate from '@/shared/hooks/useCreate';
 import useLayout from '@/shared/hooks/useLayout';
+import sectionApi from '@/shared/api/sectionApi';
 
 const CreateCategory: React.FC = () => {
   const [categoryName, setCategoryName] = useState<string>('');
   const [visibility, setVisibility] = useState<string>('visible-false');
-  const { updateEditCategoryData, submitCategoryUpdate } = useCreate();
-  const { data, setCgryModalIsOpen, setOnboardingStep } = useLayout();
+  const { data, setCgryModalIsOpen, setCurrentCategoryList } = useLayout();
 
   const resetData = () => {
     setCategoryName('');
@@ -23,15 +22,35 @@ const CreateCategory: React.FC = () => {
     resetData();
   };
 
-  const onClickNextBtn = () => {
-    updateEditCategoryData({
-      categoryName,
-      visibility: visibility === 'visible-false',
-    });
-    submitCategoryUpdate(); //생성
-    setOnboardingStep(data.onboardingStep + 1);
+  const onClickNextBtn = async () => {
+    await sectionApi
+      .updateSection({
+        name: categoryName,
+        isPublic: visibility === 'visible-true',
+        categoryId: data.currentCategory?.folderId ?? 0,
+        groupId: data.currentGroupTab?.id ?? 0,
+      })
+      .then(() => {
+        if (data.currentGroupTab?.id)
+          sectionApi.getSections(data.currentGroupTab.id).then((res) => {
+            setCurrentCategoryList(res);
+          });
+      });
+
+    // setOnboardingStep(data.onboardingStep + 1);
     setCgryModalIsOpen(false);
   };
+
+  useEffect(() => {
+    console.log('modalopen');
+    console.log(data);
+    if (data.cgryModalIsOpen && data.currentCategory) {
+      setCategoryName(data.currentCategory.name);
+      setVisibility(
+        data.currentCategory.isPublic ? 'visible-true' : 'visible-false',
+      );
+    }
+  }, [data.cgryModalIsOpen]);
 
   return (
     <ModalLayout
@@ -44,6 +63,7 @@ const CreateCategory: React.FC = () => {
       }}
     >
       <CreateCategoryContent
+        categoryName={categoryName}
         setCategoryName={setCategoryName}
         visibility={visibility}
         setVisibility={setVisibility}
