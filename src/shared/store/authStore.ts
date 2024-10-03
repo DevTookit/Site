@@ -52,23 +52,26 @@ const useAuthStore = create<AuthState>((set) => ({
 
   // 페이지 로드시 토큰이 있으면 사용자 정보를 서버에서 불러옴
   fetchUserInfo: async () => {
-    let token = getToken();
+    const token = getToken();
     const refreshToken = getRefreshToken();
     console.log(!token && refreshToken);
     if (!token && refreshToken) {
-      const data = await authApi.issueToken(refreshToken);
-      setToken(data.accessToken);
-    }
-    token = getToken();
-
-    if (token) {
-      try {
-        authApi.getMyInfo();
-      } catch (error) {
-        console.error('Failed to fetch user info', error);
-        // 토큰이 유효하지 않으면 토큰과 사용자 정보를 제거
-        clearToken();
-      }
+      await authApi
+        .issueToken(refreshToken)
+        .then((data) => {
+          setToken(data?.accessToken);
+          try {
+            authApi.getMyInfo();
+          } catch (error) {
+            console.error('Failed to fetch user info', error);
+            // 토큰이 유효하지 않으면 토큰과 사용자 정보를 제거
+            clearToken();
+          }
+        })
+        .catch((error) => {
+          // 에러 발생 시 로그인 페이지로 리다이렉트
+          console.error('Failed to refresh token:', error);
+        });
     }
   },
 

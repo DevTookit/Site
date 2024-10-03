@@ -1,146 +1,83 @@
-import React, { useState, useEffect, useRef } from 'react';
-// import Prism from 'prismjs';
-// import 'prismjs/themes/prism.css';
+import React, { useState } from 'react';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { materialDark } from 'react-syntax-highlighter/dist/esm/styles/prism';
+// import {
+//   javascript,
+//   python,
+//   java,
+//   php,
+//   ruby,
+//   css,
+//   sql,
+//   c,
+//   cpp,
+//   csharp,
+//   go,
+//   markdown,
+//   html,
+// } from 'react-syntax-highlighter/dist/esm/languages/prism';
 
-// // Importing a wide range of Prism languages
-// import 'prismjs/components/prism-javascript';
-// import 'prismjs/components/prism-python';
-// import 'prismjs/components/prism-c';
-// import 'prismjs/components/prism-cpp';
-// import 'prismjs/components/prism-java';
-// import 'prismjs/components/prism-go';
-// import 'prismjs/components/prism-ruby';
-// import 'prismjs/components/prism-markup-templating'; // PHP 관련 템플릿 처리 플러그인
-// import 'prismjs/components/prism-php';
-// import 'prismjs/components/prism-rust';
-// import 'prismjs/components/prism-swift';
-// import 'prismjs/components/prism-typescript';
-// import 'prismjs/components/prism-css';
-// import 'prismjs/components/prism-haml';
-// import 'prismjs/components/prism-sql';
-// import 'prismjs/components/prism-bash';
-// import 'prismjs/components/prism-json';
-// import 'prismjs/components/prism-yaml';
-// import 'prismjs/components/prism-kotlin';
-// import 'prismjs/components/prism-dart';
-// import 'prismjs/components/prism-lua';
-// import 'prismjs/components/prism-perl';
-// import 'prismjs/components/prism-scala';
-// import 'prismjs/components/prism-r';
-// import 'prismjs/components/prism-haskell';
-// import 'prismjs/components/prism-elixir';
-// import 'prismjs/components/prism-markdown';
-// import 'prismjs/components/prism-v';
-// import 'prismjs/components/prism-docker';
-// import 'prismjs/components/prism-graphql';
-
-// Languages array
-const languages = [
-  'javascript',
-  'typescript',
-  'python',
-  'c',
-  'cpp',
-  'java',
-  'go',
-  'ruby',
-  'php',
-  'rust',
-  'swift',
-  'css',
-  'haml',
-  'sql',
-  'bash',
-  'json',
-  'yaml',
-  'kotlin',
-  'dart',
-  'lua',
-  'perl',
-  'scala',
-  'r',
-  'haskell',
-  'elixir',
-  'markdown',
-  'v',
-  'docker',
-  'graphql',
-];
-
-const CodeEditor = () => {
+const CodeEditor: React.FC = () => {
+  const [code, setCode] = useState('// Your code here');
   const [language, setLanguage] = useState('javascript');
-  const [code, setCode] = useState('// Start typing your code here...');
-  const codeRef = useRef<HTMLPreElement>(null);
-  const textAreaRef = useRef<HTMLTextAreaElement>(null);
 
-  useEffect(() => {
-    // Prism.highlightAll(); // Highlighting the code on language change or code change
-    // Synchronize the height of the pre and textarea
-    if (textAreaRef.current) {
-      textAreaRef.current.style.height = 'auto'; // Reset height
-      textAreaRef.current.style.height = `${textAreaRef.current.scrollHeight}px`; // Set to scrollHeight
-    }
-  }, [language, code]);
-
-  const handleInput = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCode(e.target.value);
+  const handleLanguageChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setLanguage(e.target.value);
   };
 
   return (
-    <div className="flex h-full w-full flex-col p-4">
-      {/* Language Selector */}
-      <label htmlFor="language-select" className="mb-2 block text-lg">
-        Choose Language:
-      </label>
-      <select
-        id="language-select"
-        value={language}
-        onChange={(e) => setLanguage(e.target.value)}
-        className="mb-4 rounded border p-2"
-      >
-        {languages.map((lang) => (
-          <option key={lang} value={lang}>
-            {lang}
-          </option>
-        ))}
+    <div className="editor-container">
+      <select onChange={handleLanguageChange} className="language-select">
+        <option value="javascript">JavaScript</option>
+        <option value="python">Python</option>
+        <option value="java">Java</option>
+        <option value="php">PHP</option>
+        <option value="ruby">Ruby</option>
+        <option value="css">CSS</option>
+        <option value="html">HTML</option>
+        <option value="sql">SQL</option>
+        <option value="c">C</option>
+        <option value="cpp">C++</option>
+        <option value="csharp">C#</option>
+        <option value="go">Go</option>
+        <option value="markdown">Markdown</option>
       </select>
-
-      {/* Code Editor with real-time highlighting */}
-      <div className="relative h-full pb-20">
-        {/* Overlay to display the highlighted code */}
-        <pre
-          ref={codeRef}
-          className={`language-${language} absolute inset-0 z-0 mt-0 overflow-auto p-2`}
-          style={{
-            whiteSpace: 'pre-wrap',
-            wordWrap: 'break-word',
-            marginTop: '0px',
-            fontFamily: 'monospace', // Use a monospace font for both elements
-            fontSize: '16px', // Match font size
-            lineHeight: '1.5', // Adjust line height for better alignment
-            letterSpacing: '0.5px', // Match letter spacing
-          }}
-        >
-          <code className={`language-${language}`}>{code}</code>
-        </pre>
-
-        {/* Hidden textarea to capture input */}
-        <textarea
-          ref={textAreaRef}
-          value={code}
-          onChange={handleInput}
-          className="absolute inset-0 z-10 w-full resize-none border-none bg-darken-300 p-4 text-base outline-none"
-          style={{
-            color: 'transparent',
-            caretColor: 'black',
-            fontFamily: 'monospace', // Use a monospace font for both elements
-            fontSize: '16px', // Match font size
-            lineHeight: '1.5', // Match line height with pre
-            letterSpacing: '0.5px', // Match letter spacing
-          }}
-          spellCheck={false}
-        />
-      </div>
+      <textarea
+        value={code}
+        onChange={(e) => setCode(e.target.value)}
+        className="code-input"
+        rows={10}
+        placeholder="Write your code here..."
+      />
+      <SyntaxHighlighter language={language} style={materialDark}>
+        {code}
+      </SyntaxHighlighter>
+      <style>{`
+        .editor-container {
+          width: 100%;
+          padding: 20px;
+          background-color: #1e1e1e; /* 배경색을 검정색으로 설정 */
+          color: white;
+        }
+        .language-select {
+          margin-bottom: 10px;
+          background: #2d2d2d;
+          color: white;
+          border: 1px solid #ccc;
+          padding: 5px;
+        }
+        .code-input {
+          width: 100%;
+          background-color: #2d2d2d; /* 에디터 배경 검정색 */
+          color: white; /* 텍스트 색상 */
+          border: none;
+          padding: 10px;
+          font-family: monospace;
+          font-size: 14px;
+          margin-bottom: 20px;
+          resize: none;
+        }
+      `}</style>
     </div>
   );
 };

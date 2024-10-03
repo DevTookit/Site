@@ -19,6 +19,7 @@ import {
   VerifyEmailResponse,
 } from '../types/authType';
 import { setRefreshToken, setToken } from '../util/tokenUtil';
+import Cookies from 'js-cookie';
 
 //! 유저 생성
 const createUser = async (
@@ -68,20 +69,29 @@ const confirmEmailVerification = async (
   return response.data;
 };
 
-//! 토큰 발급
 const issueToken = async (refreshToken: string): Promise<TokenResponse> => {
-  const response = await api.post<TokenResponse>(
-    '/v1/users/token',
-    refreshToken,
-    {
-      headers: {
-        Accept: '*/*',
-        'Content-Type': 'application/json', // 헤더 설정
-        Authorization: `Bearer ${refreshToken}`,
+  try {
+    const response = await api.post<TokenResponse>(
+      '/v1/users/token',
+      refreshToken,
+      {
+        headers: {
+          Accept: '*/*',
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${refreshToken}`,
+        },
       },
-    },
-  );
-  return response.data;
+    );
+    return response.data;
+  } catch (error) {
+    console.error('Token refresh error:', error);
+
+    // 쿠키에서 refreshToken 삭제
+    Cookies.remove('refreshToken');
+
+    // 에러를 호출하는 쪽으로 전달
+    return Promise.reject(error);
+  }
 };
 
 //! 로그인
