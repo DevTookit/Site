@@ -17,7 +17,7 @@ export const createContent = async (
     'ContentCreateRequest',
     JSON.stringify({
       name: contentData.name,
-      languages: null,
+      languages: contentData.languages,
       skills: contentData.skills,
       content: contentData.content,
       codeDescription: contentData.codeDescription,

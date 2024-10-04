@@ -5,10 +5,14 @@ import CopyRounded from '@svg/icon_copy_rounded.svg?react';
 import Breadcrumb from '@/shared/ui/group/BreadCrumb';
 import useLayout from '@/shared/hooks/useLayout';
 import SkillInput from '@/features/input/Skill';
+import contentApi from '@/shared/api/contentApi';
 import { IconType } from 'react-icons';
+import { useNavigate } from 'react-router-dom';
 
 const CodeEditor: React.FC = () => {
+  const navigate = useNavigate();
   const [name, setName] = useState('');
+  const [description, setDescription] = useState('');
   const [code, setCode] = useState('// Your code here');
   const [skills, setSkills] = useState<
     { name: string; icon: IconType | undefined; color: string }[]
@@ -32,7 +36,22 @@ const CodeEditor: React.FC = () => {
   };
 
   const handleSave = () => {
-    console.log(name);
+    contentApi
+      .createContent(
+        data.currentGroupTab?.id ?? 0,
+        data.currentRepository?.folderId ?? 0,
+        {
+          name: name,
+          languages: [language],
+          skills: skills.map((el) => el.name),
+          content: code,
+          codeDescription: description,
+          type: 'CODE',
+        },
+      )
+      .then(() => {
+        navigate(-1);
+      });
   };
 
   const copyToClipboard = () => {
@@ -68,7 +87,7 @@ const CodeEditor: React.FC = () => {
       <input
         type="text"
         placeholder="캡션을 입력해 주세요."
-        onChange={(e) => setName(e.target.value)}
+        onChange={(e) => setDescription(e.target.value)}
         className="mb-6 h-5 w-full rounded-md border-2 border-solid border-primary bg-primary pl-0 text-base text-lighten-400 placeholder:text-lighten-300"
       />
       <div className="flex h-full w-full flex-col text-white">
@@ -96,7 +115,7 @@ const CodeEditor: React.FC = () => {
             <span className="text-base text-lighten-500">코드 복사</span>
           </button>
         </div>
-        <div className="relative h-[400px] w-full">
+        <div className="relative mb-6 h-[400px] w-full">
           {/* 하이라이팅된 코드 */}
           <SyntaxHighlighter
             language={language}
