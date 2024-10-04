@@ -126,8 +126,8 @@ const SkillInput: React.FC<SkillInputProps> = ({ skills, setSkills }) => {
         value={skillInput}
         onChange={onChangeSkillInputChange}
         onKeyDown={onKeyDownSkillAdd}
-        placeholder="개발 스택을 입력해주세요."
-        className="h-[60px] w-[559px] rounded-md border-2 border-solid border-lighten-100 bg-darken-100 p-4 text-white placeholder:text-lighten-500"
+        placeholder="스킬 뱃지를 추가해 주세요."
+        className="h-[40px] w-[559px] rounded-md border-2 border-solid border-lighten-100 bg-lighten-100 p-4 text-white placeholder:text-lighten-500"
       />
       {/* 추천 검색어 */}
       {skillInput && filteredSkills.length > 0 && (
