@@ -3,6 +3,7 @@ import TypeCode from '@svg/icon_type_code.svg?react';
 import TypeBoard from '@svg/icon_type_board.svg?react';
 import TypeFolder from '@svg/icon_type_folder.svg?react';
 import Bookmark from '@svg/icon_bookmark.svg?react';
+import BookmarkActive from '@svg/icon_bookmark_active.svg?react';
 // import BookmarkOn from '@svg/icon_bookmark_on.svg?react';
 import { format } from 'date-fns';
 
@@ -185,7 +186,9 @@ const GroupList: React.FC = () => {
                           {el.size}
                         </li>
                         <li className="flex w-20 items-center justify-center text-lighten-400">
-                          <Bookmark />
+                          <button>
+                            {el.isBookmark ? <BookmarkActive /> : <Bookmark />}
+                          </button>
                         </li>
                       </ul>
                     </li>
