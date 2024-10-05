@@ -42,15 +42,16 @@ const GroupList: React.FC = () => {
 
   const onClickTab = (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
     setTab(tab);
+    getList();
+  };
+  const getList = () => {
     contentApi.searchContent(data.currentGroupTab?.id ?? 0, tab).then((res) => {
       setList(res);
     });
   };
 
   useEffect(() => {
-    contentApi.searchContent(data.currentGroupTab?.id ?? 0, '').then((res) => {
-      setList(res);
-    });
+    getList();
   }, []);
 
   return (

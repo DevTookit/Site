@@ -8,7 +8,7 @@ import api from './axios';
 // 카테고리 조회
 const getSections = async (
   groupId: number,
-  parentSectionId?: number,
+  parentSectionId?: number | null,
 ): Promise<SectionResponse[]> => {
   const response = await api.get<SectionResponse[]>(
     `/v1/sections?page=0&size=20&groupId=${groupId}${parentSectionId ? '&parentSectionId=' + String(parentSectionId) : ''}`,
@@ -37,12 +37,22 @@ const updateSection = async (
   const response = await api.patch<SectionResponse>(`/v1/sections`, param);
   return response.data;
 };
+// 카테고리 안에 레포지토리 있는 지 확인
+const checkSectionExistence = async (
+  sectionId: number,
+): Promise<SectionResponse> => {
+  const response = await api.get<SectionResponse>(
+    `/v1/sections/exist/repository?sectionId=${sectionId}`,
+  );
+  return response.data;
+};
 
 const sectionApi = {
   getSections,
   createSection,
   deleteSection,
   updateSection,
+  checkSectionExistence,
 };
 
 export default sectionApi;

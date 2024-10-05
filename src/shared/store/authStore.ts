@@ -54,7 +54,7 @@ const useAuthStore = create<AuthState>((set) => ({
   fetchUserInfo: async () => {
     const token = getToken();
     const refreshToken = getRefreshToken();
-    console.log(!token && refreshToken);
+
     if (!token && refreshToken) {
       await authApi
         .issueToken(refreshToken)

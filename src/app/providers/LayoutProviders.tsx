@@ -18,7 +18,7 @@ export interface LayoutContextType {
   ) => void;
   setCurrentGroupTab: (data: GroupResponse) => void;
   setCurrentGroup: (data: GroupResponse) => void;
-  setCurrentCategory: (data: SectionResponse | null) => void;
+  setCurrentCategory: (data: SectionResponse | null, parentId?: number) => void;
   setCurrentRepository: (data: RepositoryData | null) => void;
 }
 
@@ -31,7 +31,7 @@ export const LayoutProvider: React.FC<{ children: ReactNode }> = ({
     currentFolder: '',
     cgryModalIsOpen: false,
     groupModalIsOpen: false,
-    onboardingStep: 0,
+    onboardingStep: 1,
     myGroupList: [],
     myJoinedGroupList: [],
     currentCategoryList: [],
@@ -135,11 +135,15 @@ export const LayoutProvider: React.FC<{ children: ReactNode }> = ({
       currentGroup: data,
     }));
   };
-  const setCurrentCategory = (data: null | SectionResponse) => {
-    setData((prevData: LayoutData) => ({
-      ...prevData,
-      currentCategory: data,
-    }));
+  const setCurrentCategory = (
+    data: null | SectionResponse,
+    parentId?: number,
+  ) => {
+    if (data)
+      setData((prevData: LayoutData) => ({
+        ...prevData,
+        currentCategory: { ...data, parentId: parentId ?? null },
+      }));
   };
   const setCurrentRepository = (data: RepositoryData | null) => {
     setData((prevData: LayoutData) => ({

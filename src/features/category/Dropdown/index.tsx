@@ -26,13 +26,17 @@ const CategoryDropdown: React.FC<DropdownProps> = ({
     setIsOpen(!isOpen);
   };
 
-  const getChildList = <T extends HTMLElement>(e: React.MouseEvent<T>) => {
-    sectionApi
-      .getSections(data.currentGroupTab?.id ?? 0, folderId)
-      .then((res) => {
-        setCurrentCategoryChildList(folderId, res);
-        toggleDropdown(e);
-      });
+  const getChildList = async <T extends HTMLElement>(
+    e: React.MouseEvent<T>,
+  ) => {
+    if (!isOpen) {
+      await sectionApi
+        .getSections(data.currentGroupTab?.id ?? 0, folderId)
+        .then((res) => {
+          setCurrentCategoryChildList(folderId, res);
+        });
+    }
+    toggleDropdown(e);
   };
 
   return (

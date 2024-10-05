@@ -17,7 +17,7 @@ export interface LayoutData {
   };
   currentGroupTab: GroupResponse | null;
   currentGroup: GroupResponse | null;
-  currentCategory: SectionResponse | null;
+  currentCategory: (SectionResponse & { parentId: number | null }) | null;
   currentRepository: RepositoryData | null;
 }
 

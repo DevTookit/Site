@@ -19,19 +19,21 @@ import { LayoutProvider } from '../providers/LayoutProviders';
 import useAuthStore from '@/shared/store/authStore';
 //util
 import { getRefreshToken, getToken } from '@/shared/util/tokenUtil';
+//api
+import authApi from '@/shared/api/authApi';
 
 const AppRouter: React.FC = () => {
-  const { userTags, fetchUserInfo } = useAuthStore();
+  const { userName, userTags, fetchUserInfo } = useAuthStore();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     const token = getToken();
     const refreshToken = getRefreshToken();
-    console.log(userTags, token, location.pathname);
-
     if (refreshToken && !token) {
       fetchUserInfo();
+    } else if (!userName) {
+      authApi.getMyInfo();
     }
 
     if (!refreshToken && !token && location.pathname !== '/auth/login') {
@@ -43,11 +45,8 @@ const AppRouter: React.FC = () => {
     ) {
       navigate('/auth/profile/settings');
     }
-  }, [location, navigate]);
+  }, [location.pathname]);
 
-  useEffect(() => {
-    fetchUserInfo();
-  }, []);
   return (
     <div className="min-w-screen relative flex min-h-screen items-center justify-center overflow-y-auto bg-black">
       <Routes>

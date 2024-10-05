@@ -7,42 +7,65 @@ import CreateCategoryModal from '@/features/category/modal/CreateCategory';
 import useLayout from '@/shared/hooks/useLayout';
 import groupApi from '@/shared/api/groupApi';
 import sectionApi from '@/shared/api/sectionApi';
-import { SectionResponse } from '@/shared/types/sectionType';
+import contentApi from '@/shared/api/contentApi';
+/* store */
+import useAuthStore from '@/shared/store/authStore';
+/* hook */
+import useGroupPathEffect from '@/shared/hooks/useGroupPathEffect';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const { isOnBoardingComplete } = useAuthStore();
   const {
     data,
-    setMyGroupList,
     setMyJoinedGroupList,
-    setCurrentCategoryList,
     setOnboardingStep,
+    setCurrentRepository,
+    setCurrentCategoryList,
   } = useLayout();
 
   const init = async () => {
-    await Promise.all([
-      groupApi.getMyGroupList().then((res) => {
-        setMyGroupList(res);
-      }),
-      groupApi.getMyJoinedGroupList().then(async (res) => {
-        if (res.length) {
-          await sectionApi
-            .getSections(res[0].id)
-            .then((res: SectionResponse[]) => {
-              setCurrentCategoryList(res);
-            });
-        }
-        setMyJoinedGroupList(res);
-      }),
-    ]);
-  };
-  useEffect(() => {
-    init().then(() => {
-      let step = 1;
-      if (data.myJoinedGroupList.length > 0) step++;
-      if (data.currentCategoryList.length > 0) step++;
-      setOnboardingStep(step);
+    await groupApi.getMyJoinedGroupList().then(async (res) => {
+      setMyJoinedGroupList(res);
+      await sectionApi.getSections(res[0].id).then((res) => {
+        setCurrentCategoryList(res);
+      });
     });
-  }, []);
+    setCurrentRepository(null); //선택된 저장소 해제
+  };
+
+  //
+  useGroupPathEffect(async () => {
+    init();
+  });
+
+  useEffect(() => {
+    const checkOnboarding = async () => {
+      let step = data.onboardingStep;
+      console.log('---------------------');
+      console.log(data);
+      if (step === 1 && data.myJoinedGroupList.length > 0) step += 1;
+      console.log('step:1 ', step);
+      if (step === 2 && data.currentCategoryList.length > 0) {
+        await sectionApi
+          .checkSectionExistence(data.currentCategoryList[0].folderId)
+          .then((res) => {
+            if (res) step++;
+          });
+      }
+      console.log('step:2 ', step);
+      if (step === 3) {
+        await contentApi
+          .searchContent(data.myJoinedGroupList[0].id, '')
+          .then((res) => {
+            if (res.length > 0) step++;
+          });
+      }
+      console.log('step:3 ', step);
+      if (data.onboardingStep < step) setOnboardingStep(step);
+    };
+
+    if (!isOnBoardingComplete) checkOnboarding();
+  }, [data.myJoinedGroupList, data.currentCategoryList, data.onboardingStep]);
 
   return (
     <div className="flex min-h-screen w-full">

@@ -1,6 +1,7 @@
 import RadioGroup from '@/shared/ui/Radio';
 
 interface CreateGroupStep1rops {
+  state: 'edit' | 'create' | '';
   categoryName: string;
   setCategoryName: (categoryName: string) => void;
   visibility: string;
@@ -8,6 +9,7 @@ interface CreateGroupStep1rops {
 }
 
 const CreateCategory: React.FC<CreateGroupStep1rops> = ({
+  state,
   categoryName,
   setCategoryName,
   visibility,
@@ -16,7 +18,7 @@ const CreateCategory: React.FC<CreateGroupStep1rops> = ({
   return (
     <div className="rounded-t bg-primary p-10 pb-0">
       <h4 className="mb-[30px] text-xl font-bold text-lighten-500">
-        카테고리 편집
+        카테고리 {state === 'edit' ? '편집' : state === 'create' ? '생성' : ''}
       </h4>
       <span className="mb-2 inline-block text-base text-lighten-300">
         카테고리 이름

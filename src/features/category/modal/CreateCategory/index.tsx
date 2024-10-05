@@ -8,9 +8,15 @@ import useLayout from '@/shared/hooks/useLayout';
 import sectionApi from '@/shared/api/sectionApi';
 
 const CreateCategory: React.FC = () => {
+  const [state, setState] = useState<'create' | 'edit' | ''>('');
   const [categoryName, setCategoryName] = useState<string>('');
   const [visibility, setVisibility] = useState<string>('visible-false');
-  const { data, setCgryModalIsOpen, setCurrentCategoryList } = useLayout();
+  const {
+    data,
+    setCgryModalIsOpen,
+    setCurrentCategoryList,
+    setCurrentCategoryChildList,
+  } = useLayout();
 
   const resetData = () => {
     setCategoryName('');
@@ -31,10 +37,14 @@ const CreateCategory: React.FC = () => {
         groupId: data.currentGroupTab?.id ?? 0,
       })
       .then(() => {
+        const parentId = data.currentCategory?.parentId;
         if (data.currentGroupTab?.id)
-          sectionApi.getSections(data.currentGroupTab.id).then((res) => {
-            setCurrentCategoryList(res);
-          });
+          sectionApi
+            .getSections(data.currentGroupTab.id, parentId)
+            .then((res) => {
+              if (parentId) setCurrentCategoryChildList(parentId, res);
+              else setCurrentCategoryList(res);
+            });
       });
 
     // setOnboardingStep(data.onboardingStep + 1);
@@ -42,13 +52,14 @@ const CreateCategory: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log('modalopen');
-    console.log(data);
     if (data.cgryModalIsOpen && data.currentCategory) {
-      setCategoryName(data.currentCategory.name);
+      setState('edit');
+      setCategoryName(data.currentCategory?.name);
       setVisibility(
         data.currentCategory.isPublic ? 'visible-true' : 'visible-false',
       );
+    } else {
+      setState('create');
     }
   }, [data.cgryModalIsOpen]);
 
@@ -63,6 +74,7 @@ const CreateCategory: React.FC = () => {
       }}
     >
       <CreateCategoryContent
+        state={state}
         categoryName={categoryName}
         setCategoryName={setCategoryName}
         visibility={visibility}

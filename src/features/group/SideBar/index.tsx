@@ -14,7 +14,7 @@ import CategoryDropdown from '@/features/category/Dropdown';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
 
-import { Link, useLocation, useNavigate } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
+import { Link, useNavigate } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
 import useAuthStore from '@/shared/store/authStore';
 
 /* api */
@@ -22,7 +22,6 @@ import sectionApi from '@/shared/api/sectionApi';
 import groupApi from '@/shared/api/groupApi';
 
 const GroupSideBar: React.FC = () => {
-  const location = useLocation();
   const navigate = useNavigate();
   const { userImg, userJob, userName } = useAuthStore();
   const [groupTab, setGroupTab] = useState(0);
@@ -124,10 +123,12 @@ const GroupSideBar: React.FC = () => {
   };
 
   const onClickGroupTab = async (tab: number) => {
-    const groupId = data.myJoinedGroupList[tab].id;
     setCurrentGroupTab(data.myJoinedGroupList[tab]);
     setGroupTab(tab);
-    await getSections(groupId);
+    if (groupTab !== tab) {
+      const groupId = data.myJoinedGroupList[tab].id;
+      await getSections(groupId);
+    }
     navigate('/group');
   };
 
@@ -135,13 +136,6 @@ const GroupSideBar: React.FC = () => {
     if (data.myJoinedGroupList.length > 0) onClickGroupTab(0);
     setOptions(categoryContextOptions);
   }, [data.myJoinedGroupList]);
-
-  useEffect(() => {
-    console.log(location);
-    if (location.pathname === '/group') {
-      setCurrentRepository(null);
-    }
-  }, [location]);
 
   return (
     <>
@@ -226,7 +220,7 @@ const GroupSideBar: React.FC = () => {
                 전체보기
               </span>
             </li>
-            {data.currentCategoryList.length &&
+            {data.currentCategoryList.length ? (
               data.currentCategoryList.map((el, idx) => {
                 return (
                   <CategoryDropdown
@@ -253,7 +247,7 @@ const GroupSideBar: React.FC = () => {
                             setOptions(categoryContextOptions);
                             e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
                             e.stopPropagation(); // 이벤트 전파 방지
-                            setCurrentCategory(el2); //카테고리 선택
+                            setCurrentCategory(el2, el.folderId); //카테고리 선택
                             showContextMenu(e.clientX, e.clientY);
                           }}
                         >
@@ -269,7 +263,7 @@ const GroupSideBar: React.FC = () => {
                                   setOptions(categoryContextOptions);
                                   e.preventDefault(); // 기본 브라우저 컨텍스트 메뉴 막기
                                   e.stopPropagation(); // 이벤트 전파 방지
-                                  setCurrentCategory(el3); //카테고리 선택
+                                  setCurrentCategory(el3, el2.folderId); //카테고리 선택
                                   showContextMenu(e.clientX, e.clientY);
                                 }}
                               >
@@ -336,7 +330,10 @@ const GroupSideBar: React.FC = () => {
                     })}
                   </CategoryDropdown>
                 );
-              })}
+              })
+            ) : (
+              <></>
+            )}
           </ul>
         </div>
         <ContextMenu
