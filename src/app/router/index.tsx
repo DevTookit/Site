@@ -12,6 +12,7 @@ import GroupList from '@/pages/Group/List';
 import GroupBoardCreate from '@/pages/Group/board/Create';
 import GroupCodeCreate from '@/pages/Group/code/Create';
 import GroupLayout from '../layouts/groupLayout';
+import GroupExplore from '@/pages/Group/Explore';
 //provider
 import { CreateProvider } from '../providers/CreateProvider';
 import { LayoutProvider } from '../providers/LayoutProviders';
@@ -104,6 +105,18 @@ const AppRouter: React.FC = () => {
               <CreateProvider>
                 <GroupLayout>
                   <GroupCodeCreate />
+                </GroupLayout>
+              </CreateProvider>
+            </LayoutProvider>
+          }
+        />
+        <Route
+          path="/group/explore"
+          element={
+            <LayoutProvider>
+              <CreateProvider>
+                <GroupLayout>
+                  <GroupExplore />
                 </GroupLayout>
               </CreateProvider>
             </LayoutProvider>

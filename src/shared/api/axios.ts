@@ -10,8 +10,15 @@ const api = axios.create({
 
 // 요청 시 로그인 토큰을 헤더에 추가하는 인터셉터
 api.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    const token = getToken();
+  async (config: InternalAxiosRequestConfig) => {
+    let token = getToken();
+
+    if (!token) {
+      const refreshToken = getRefreshToken();
+      const response = await authApi.issueToken(refreshToken ?? '');
+      token = response.accessToken;
+      setToken(token);
+    }
 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
