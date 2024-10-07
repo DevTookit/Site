@@ -14,7 +14,7 @@ import CategoryDropdown from '@/features/category/Dropdown';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
 
-import { Link, useNavigate } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
+import { Link, useLocation, useNavigate } from 'react-router-dom'; // 라우팅 라이브러리에 따라 변경 가능
 import useAuthStore from '@/shared/store/authStore';
 
 /* api */
@@ -22,6 +22,7 @@ import sectionApi from '@/shared/api/sectionApi';
 import groupApi from '@/shared/api/groupApi';
 
 const GroupSideBar: React.FC = () => {
+  const location = useLocation(); // 현재 경로 가져오기
   const navigate = useNavigate();
   const { userImg, userJob, userName } = useAuthStore();
   const [groupTab, setGroupTab] = useState(0);
@@ -132,6 +133,10 @@ const GroupSideBar: React.FC = () => {
     navigate('/group');
   };
 
+  const goToExplore = () => {
+    navigate('/group/explore');
+  };
+
   useEffect(() => {
     if (data.myJoinedGroupList.length > 0) onClickGroupTab(0);
     setOptions(categoryContextOptions);
@@ -196,8 +201,11 @@ const GroupSideBar: React.FC = () => {
           >
             <AddCircle className="h-10 w-10" />
           </button>
-          <button className="">
-            <ExploreRounded className="h-10 w-10 text-brand" />
+          <button
+            className={`rounded-full ${location.pathname === '/group/explore' ? 'bg-brand' : ''}`}
+            onClick={goToExplore}
+          >
+            <ExploreRounded className="h-10 w-10 rounded-full" />
           </button>
         </div>
         {/* Category List */}

@@ -30,4 +30,20 @@ module.exports = {
       },
     },
   },
+  plugins: [
+    function ({ addUtilities }) {
+      addUtilities({
+        '.scrollbar-hide': {
+          /* 스크롤바 숨기기 */
+          '&::-webkit-scrollbar': {
+            display: 'none',
+          },
+          '&': {
+            '-ms-overflow-style': 'none' /* IE 및 Edge */,
+            'scrollbar-width': 'none' /* Firefox */,
+          },
+        },
+      });
+    },
+  ],
 };

@@ -61,8 +61,8 @@ const GroupList: React.FC = () => {
         isOpen={fileModalisOpen}
         setIsOpen={setFileModalisOpen}
       />
-      <div className="flex w-full flex-1 flex-col">
-        <div className="mb-1 mt-6 flex justify-start">
+      <div className="mt-6 flex w-full flex-1 flex-col">
+        <div className="mb-1 flex justify-start">
           <Breadcrumb
             items={
               (data.currentRepository?.depth1 ?? '') +
@@ -73,7 +73,7 @@ const GroupList: React.FC = () => {
             }
           />
         </div>
-        <h4 className="text-[32px] font-bold text-lighten-500">
+        <h4 className="text-[32px] font-bold text-lighten-600">
           {data.currentRepository?.name}
         </h4>
         <div className="mb-[6px] mt-6 flex justify-between">

@@ -14,7 +14,7 @@ const CreateGroup: React.FC = () => {
   const [groupName, setGroupName] = useState<string>('');
   const [visibility, setVisibility] = useState<boolean>(true);
   const { updateCreateGroupData, submitGroupCreate } = useCreate();
-  const { data, setGroupModalIsOpen, setOnboardingStep } = useLayout();
+  const { data, setGroupModalIsOpen } = useLayout();
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -51,9 +51,6 @@ const CreateGroup: React.FC = () => {
     } else {
       updateCreateGroupData({ visibility });
       submitGroupCreate(); //생성
-      if (data.onboardingStep === 1) {
-        setOnboardingStep(data.onboardingStep + 1); //유저정보에서 온보딩 여부 X일 때
-      }
       setGroupModalIsOpen(false);
       resetData();
     }

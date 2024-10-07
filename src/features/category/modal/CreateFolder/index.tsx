@@ -15,7 +15,7 @@ interface CreateFolderProps {
 const CreateFolder: React.FC<CreateFolderProps> = ({ isOpen, setIsOpen }) => {
   const [folderName, setFolderName] = useState<string>('');
   const [folderOption, setFolderOption] = useState<string>('MENU');
-  const { data, setCurrentCategoryChildList, setOnboardingStep } = useLayout();
+  const { data, setCurrentCategoryChildList } = useLayout();
 
   const resetData = () => {
     setFolderName('');
@@ -37,7 +37,6 @@ const CreateFolder: React.FC<CreateFolderProps> = ({ isOpen, setIsOpen }) => {
         type: folderOption,
       })
       .then(() => {
-        if (data.onboardingStep === 2) setOnboardingStep(3);
         sectionApi
           .getSections(
             data.currentGroupTab?.id ?? 0,

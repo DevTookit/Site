@@ -6,10 +6,9 @@ import ExplorePageBtn from '@/shared/ui/onboarding/Button/ExplorePage';
 import useContextMenuStore from '@/shared/store/contextStore';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
-import { useEffect } from 'react';
 
 const GroupOnboarding: React.FC = () => {
-  const { data, setGroupModalIsOpen, setOnboardingStep } = useLayout();
+  const { data, setGroupModalIsOpen } = useLayout();
   const { showContextMenu } = useContextMenuStore();
 
   const getOnboardingStepStatus = (
@@ -19,14 +18,6 @@ const GroupOnboarding: React.FC = () => {
     else if (data.onboardingStep > chkStep) return 'check';
     else return '';
   };
-
-  useEffect(() => {
-    let step = 1;
-    if (data.myJoinedGroupList.length > 0) step++;
-
-    setOnboardingStep(step);
-  }, []);
-
   return (
     <div className="space-y-[10px]">
       <CreateGroupBtn

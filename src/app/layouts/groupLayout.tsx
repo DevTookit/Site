@@ -24,46 +24,42 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   } = useLayout();
 
   const init = async () => {
-    await groupApi.getMyJoinedGroupList().then(async (res) => {
-      setMyJoinedGroupList(res);
-      await sectionApi.getSections(res[0].id).then((res) => {
-        setCurrentCategoryList(res);
+    if (!data.myJoinedGroupList.length) {
+      await groupApi.getMyJoinedGroupList().then(async (res) => {
+        setMyJoinedGroupList(res);
+        await sectionApi.getSections(res[0].id).then((res) => {
+          setCurrentCategoryList(res);
+        });
       });
-    });
-    setCurrentRepository(null); //선택된 저장소 해제
+      setCurrentRepository(null); //선택된 저장소 해제
+    }
   };
 
   //
   useGroupPathEffect(async () => {
     init();
   });
+  const checkOnboarding = async () => {
+    let step = data.onboardingStep;
+    if (step === 1 && data.myJoinedGroupList.length > 0) step += 1;
+    if (step === 2 && data.currentCategoryList.length > 0) {
+      await sectionApi
+        .checkSectionExistence(data.currentCategoryList[0].folderId)
+        .then((res) => {
+          if (res) step++;
+        });
+    }
+    if (step === 3) {
+      await contentApi
+        .searchContent(data.myJoinedGroupList[0].id, '')
+        .then((res) => {
+          if (res.length > 0) step++;
+        });
+    }
+    if (data.onboardingStep < step) setOnboardingStep(step);
+  };
 
   useEffect(() => {
-    const checkOnboarding = async () => {
-      let step = data.onboardingStep;
-      console.log('---------------------');
-      console.log(data);
-      if (step === 1 && data.myJoinedGroupList.length > 0) step += 1;
-      console.log('step:1 ', step);
-      if (step === 2 && data.currentCategoryList.length > 0) {
-        await sectionApi
-          .checkSectionExistence(data.currentCategoryList[0].folderId)
-          .then((res) => {
-            if (res) step++;
-          });
-      }
-      console.log('step:2 ', step);
-      if (step === 3) {
-        await contentApi
-          .searchContent(data.myJoinedGroupList[0].id, '')
-          .then((res) => {
-            if (res.length > 0) step++;
-          });
-      }
-      console.log('step:3 ', step);
-      if (data.onboardingStep < step) setOnboardingStep(step);
-    };
-
     if (!isOnBoardingComplete) checkOnboarding();
   }, [data.myJoinedGroupList, data.currentCategoryList, data.onboardingStep]);
 
@@ -74,7 +70,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {/* 카테고리 생성편집 모달 */}
       <CreateCategoryModal />
       <GroupSideBar />
-      <main className="flex min-h-screen flex-1 flex-grow flex-col items-center justify-between bg-primary px-10 pt-[60px]">
+      <main className="flex min-h-screen flex-1 flex-grow flex-col items-center justify-between overflow-hidden bg-primary px-10 pt-[60px]">
         <GroupHeader />
         {children}
       </main>

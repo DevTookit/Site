@@ -10,15 +10,8 @@ const api = axios.create({
 
 // 요청 시 로그인 토큰을 헤더에 추가하는 인터셉터
 api.interceptors.request.use(
-  async (config: InternalAxiosRequestConfig) => {
-    let token = getToken();
-
-    if (!token) {
-      const refreshToken = getRefreshToken();
-      const response = await authApi.issueToken(refreshToken ?? '');
-      token = response.accessToken;
-      setToken(token);
-    }
+  async (config): Promise<InternalAxiosRequestConfig<any>> => {
+    const token = getToken(); // 현재 토큰 가져오기
 
     if (token) {
       config.headers['Authorization'] = `Bearer ${token}`;
@@ -27,40 +20,65 @@ api.interceptors.request.use(
     return config;
   },
   (error) => {
-    return Promise.reject(error);
+    return Promise.reject(error); // 에러 발생 시 reject
   },
 );
 
+let isTokenRefreshing = false;
+let refreshSubscribers: ((token: string) => void)[] = [];
+// 토큰 리프레시를 구독하는 함수
+function subscribeTokenRefresh(callback: (token: string) => void) {
+  refreshSubscribers.push(callback);
+}
+
+// 토큰이 갱신된 후 호출되는 함수
+function onRefreshed(token: string) {
+  refreshSubscribers.forEach((callback) => callback(token));
+  refreshSubscribers = []; // 모든 구독자 호출 후 초기화
+}
+
+// 응답 인터셉터
 api.interceptors.response.use(
-  (response) => response, // 정상 응답은 그대로 반환
+  (response) => {
+    return response; // 정상 응답 처리
+  },
   async (error) => {
-    const refreshToken = getRefreshToken();
     const originalRequest = error.config;
 
-    // 만약 401 Unauthorized 오류가 발생했을 경우
-    if (error.response.status === 401 && !originalRequest._retry) {
-      originalRequest._retry = true; // 재시도 플래그 추가
+    // 토큰 만료 시 토큰 갱신 로직 처리
+    if (error.response?.status === 401 && !originalRequest._retry) {
+      originalRequest._retry = true; // 재시도 플래그 설정
 
-      try {
-        // 리프레시 토큰으로 새로운 액세스 토큰 요청
+      if (!isTokenRefreshing) {
+        isTokenRefreshing = true;
 
-        const response = await authApi.issueToken(refreshToken ?? '');
-
-        const newAccessToken = response.accessToken;
-        setToken(newAccessToken);
-
-        // 재시도하는 요청에 새로운 토큰 추가
-        originalRequest.headers['Authorization'] = `Bearer ${newAccessToken}`;
-
-        return api(originalRequest); // 원래 요청 재호출
-      } catch (refreshError) {
-        // 리프레시 토큰 요청 실패 시 에러 처리
-        console.error('Refresh token error:', refreshError);
-        return Promise.reject(refreshError);
+        try {
+          const refreshToken = getRefreshToken(); // 리프레시 토큰 가져오기
+          if (refreshToken) {
+            const response = await authApi.issueToken(refreshToken); // 토큰 갱신 요청
+            const newToken = response.accessToken;
+            setToken(newToken); // 새 토큰 저장
+            onRefreshed(newToken); // 구독자들에게 알림
+            originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+            return api(originalRequest); // 재시도
+          }
+        } catch (error) {
+          // 토큰 갱신 실패 시 로그아웃 처리 등
+          console.error(error);
+        } finally {
+          isTokenRefreshing = false;
+        }
       }
+
+      return new Promise((resolve) => {
+        subscribeTokenRefresh((newToken) => {
+          originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
+          resolve(api(originalRequest)); // 갱신된 토큰으로 재시도
+        });
+      });
     }
 
-    return Promise.reject(error); // 그 외 오류는 그대로 반환
+    return Promise.reject(error); // 다른 에러는 그대로 처리
   },
 );
 

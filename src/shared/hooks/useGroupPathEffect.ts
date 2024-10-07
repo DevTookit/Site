@@ -5,7 +5,7 @@ const useGroupPathEffect = (callback: () => void) => {
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname === '/group') {
+    if (location.pathname.includes('/group')) {
       callback();
     }
   }, [location.pathname]);

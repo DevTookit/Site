@@ -47,7 +47,6 @@ const CreateCategory: React.FC = () => {
             });
       });
 
-    // setOnboardingStep(data.onboardingStep + 1);
     setCgryModalIsOpen(false);
   };
 
