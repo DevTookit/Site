@@ -1,6 +1,7 @@
 import axios, { InternalAxiosRequestConfig } from 'axios';
 import { getRefreshToken, getToken, setToken } from '../util/tokenUtil';
 import authApi from './authApi';
+import { redirectToLogin } from '../util/navigationUtil';
 
 // Axios 인스턴스 생성
 const api = axios.create({
@@ -65,6 +66,7 @@ api.interceptors.response.use(
         } catch (error) {
           // 토큰 갱신 실패 시 로그아웃 처리 등
           console.error(error);
+          redirectToLogin();
         } finally {
           isTokenRefreshing = false;
         }

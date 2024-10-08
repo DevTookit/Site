@@ -16,10 +16,12 @@ import { useEffect, useState } from 'react';
 import useLayout from '@/shared/hooks/useLayout';
 import contentApi from '@/shared/api/contentApi';
 import { ContentResponse } from '@/shared/types/contentType';
+import useLoadingStore from '@/shared/store/loading';
 
 /* hook */
 
 const GroupList: React.FC = () => {
+  const setLoading = useLoadingStore((state) => state.setLoading);
   const { data } = useLayout();
   const [tab, setTab] = useState<'CODE' | 'BOARD' | 'FILE' | ''>('');
   const [fileModalisOpen, setFileModalisOpen] = useState(false);
@@ -41,18 +43,22 @@ const GroupList: React.FC = () => {
     return bgs[Math.abs(tabIdx - tabTypeIndex[tab])];
   };
 
-  const onClickTab = (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
-    setTab(tab);
-    getList();
+  const getList = async (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
+    await contentApi
+      .searchContent(data.currentGroupTab?.id ?? 0, tab)
+      .then((res) => {
+        setList(res);
+      });
   };
-  const getList = () => {
-    contentApi.searchContent(data.currentGroupTab?.id ?? 0, tab).then((res) => {
-      setList(res);
-    });
+  const onClickTab = (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
+    setLoading(true);
+    setTab(tab);
+    getList(tab);
+    setLoading(false);
   };
 
   useEffect(() => {
-    getList();
+    getList('');
   }, []);
 
   return (
@@ -145,7 +151,7 @@ const GroupList: React.FC = () => {
                 {list.map((el, idx) => {
                   return (
                     <li
-                      key={`list_${idx}`}
+                      key={`list_${el.contentId}_${idx}`}
                       className="h-16 w-full border border-lighten-100"
                     >
                       <ul className="flex h-full">

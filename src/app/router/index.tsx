@@ -1,6 +1,8 @@
 // src/app/router/index.tsx
 import React, { useEffect } from 'react';
 import { Routes, Route, useNavigate, useLocation } from 'react-router-dom';
+// 컴포넌트
+import Loading from '@/shared/ui/Loading';
 // 페이지 컴포넌트 임포트
 import RootPage from '@/pages/Root/index';
 import LoginPage from '@/pages/auth/Login';
@@ -50,6 +52,7 @@ const AppRouter: React.FC = () => {
 
   return (
     <div className="min-w-screen relative flex min-h-screen items-center justify-center overflow-y-auto bg-black">
+      <Loading />
       <Routes>
         <Route path="/" element={<RootPage />} />
         <Route path="/auth/login" element={<LoginPage />} />

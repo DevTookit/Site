@@ -7,6 +7,7 @@ import {
   getToken,
   setToken,
 } from '../util/tokenUtil';
+import { redirectToLogin } from '../util/navigationUtil';
 
 interface AuthState {
   id: number | null;
@@ -71,6 +72,7 @@ const useAuthStore = create<AuthState>((set) => ({
         .catch((error) => {
           // 에러 발생 시 로그인 페이지로 리다이렉트
           console.error('Failed to refresh token:', error);
+          redirectToLogin();
         });
     }
   },
