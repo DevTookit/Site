@@ -7,19 +7,20 @@ import useLoadingStore from '@/shared/store/loading';
 // import GroupOnboarding from '@/features/group/Onboarding';
 
 /* hook */
-// import useLayout from '@/shared/hooks/useLayout';
+import useLayout from '@/shared/hooks/useLayout';
 // import useAuthStore from '@/shared/store/authStore';
 
 const GroupExplore: React.FC = () => {
   const setLoading = useLoadingStore((state) => state.setLoading);
-  // const { data } = useLayout();
+  const { setOnboardingStep } = useLayout();
   // const { userName, isOnBoardingComplete } = useAuthStore();
   useEffect(() => {
     setLoading(true);
+    setOnboardingStep(5);
     setLoading(false);
   }, []);
   return (
-    <div className="mb-5 mt-6 flex w-full flex-1 flex-col">
+    <div className="mb-5 flex w-full flex-1 flex-col">
       <div className="flex items-center text-sm">
         <span className="text-lighten-400 hover:underline">탐색페이지</span>
       </div>

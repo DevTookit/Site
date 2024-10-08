@@ -7,7 +7,7 @@ import SearchRounded from '@svg/icon_search_rounded.svg?react';
 const GroupHeader = () => {
   return (
     <>
-      <div className="flex w-full items-center justify-between">
+      <div className="mb-5 flex w-full items-center justify-between">
         <label className="relative mr-10 w-full max-w-[500px]">
           <input
             type="text"

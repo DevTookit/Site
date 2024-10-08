@@ -12,8 +12,10 @@ import contentApi from '@/shared/api/contentApi';
 import useAuthStore from '@/shared/store/authStore';
 /* hook */
 import useGroupPathEffect from '@/shared/hooks/useGroupPathEffect';
+import useLoadingStore from '@/shared/store/loading';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const setLoading = useLoadingStore((state) => state.setLoading);
   const { isOnBoardingComplete } = useAuthStore();
   const {
     data,
@@ -43,6 +45,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     let step = data.onboardingStep;
     if (step === 1 && data.myJoinedGroupList.length > 0) step += 1;
     if (step === 2 && data.currentCategoryList.length > 0) {
+      setLoading(true);
       await sectionApi
         .checkSectionExistence(data.currentCategoryList[0].folderId)
         .then((res) => {
@@ -56,6 +59,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
           if (res.length > 0) step++;
         });
     }
+    setLoading(false);
     if (data.onboardingStep < step) setOnboardingStep(step);
   };
 
@@ -70,7 +74,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       {/* 카테고리 생성편집 모달 */}
       <CreateCategoryModal />
       <GroupSideBar />
-      <main className="flex min-h-screen flex-1 flex-grow flex-col items-center justify-between overflow-hidden bg-primary px-10 pt-[60px]">
+      <main className="flex min-h-screen flex-1 flex-grow flex-col items-center justify-between overflow-hidden bg-primary px-10 pb-5 pt-[60px]">
         <GroupHeader />
         {children}
       </main>

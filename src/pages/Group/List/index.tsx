@@ -67,7 +67,7 @@ const GroupList: React.FC = () => {
         isOpen={fileModalisOpen}
         setIsOpen={setFileModalisOpen}
       />
-      <div className="mt-6 flex w-full flex-1 flex-col">
+      <div className="flex w-full flex-1 flex-col">
         <div className="mb-1 flex justify-start">
           <Breadcrumb
             items={

@@ -6,8 +6,10 @@ import ExplorePageBtn from '@/shared/ui/onboarding/Button/ExplorePage';
 import useContextMenuStore from '@/shared/store/contextStore';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
+import { useNavigate } from 'react-router-dom';
 
 const GroupOnboarding: React.FC = () => {
+  const navigate = useNavigate();
   const { data, setGroupModalIsOpen } = useLayout();
   const { showContextMenu } = useContextMenuStore();
 
@@ -29,7 +31,12 @@ const GroupOnboarding: React.FC = () => {
         onClickFn={() => showContextMenu(242, 318)}
       />
       <WritePostBtn state={getOnboardingStepStatus(3)} onClickFn={() => {}} />
-      <ExplorePageBtn state={getOnboardingStepStatus(4)} onClickFn={() => {}} />
+      <ExplorePageBtn
+        state={getOnboardingStepStatus(4)}
+        onClickFn={() => {
+          navigate('/group/explore');
+        }}
+      />
     </div>
   );
 };
