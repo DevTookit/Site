@@ -1,3 +1,8 @@
+/* svg */
+import Bookmark from '@svg/icon_bookmark.svg?react';
+import { useEffect } from 'react';
+import useLoadingStore from '@/shared/store/loading';
+// import BookmarkActive from '@svg/icon_bookmark_active.svg?react';
 /* component */
 // import GroupOnboarding from '@/features/group/Onboarding';
 
@@ -6,11 +11,15 @@
 // import useAuthStore from '@/shared/store/authStore';
 
 const GroupExplore: React.FC = () => {
+  const setLoading = useLoadingStore((state) => state.setLoading);
   // const { data } = useLayout();
   // const { userName, isOnBoardingComplete } = useAuthStore();
-
+  useEffect(() => {
+    setLoading(true);
+    setLoading(false);
+  }, []);
   return (
-    <div className="mt-6 flex w-full flex-1 flex-col">
+    <div className="mb-5 mt-6 flex w-full flex-1 flex-col">
       <div className="flex items-center text-sm">
         <span className="text-lighten-400 hover:underline">탐색페이지</span>
       </div>
@@ -18,7 +27,7 @@ const GroupExplore: React.FC = () => {
       <p className="my-6 text-2xl font-bold text-lighten-500">
         최신 핫 그룹 🔥
       </p>
-      <ul className="scrollbar-hide flex gap-[10px] overflow-x-auto">
+      <ul className="flex gap-[10px] overflow-x-auto scrollbar-hide">
         {[1, 2, 3, 4, 5].map((el) => {
           return (
             <li
@@ -62,6 +71,44 @@ const GroupExplore: React.FC = () => {
                     가입
                   </button>
                 </div>
+              </div>
+            </li>
+          );
+        })}
+      </ul>
+      <p className="my-6 text-2xl font-bold text-lighten-500">
+        트랜디 추천 게시물 ✍🏻
+      </p>
+      <ul className="w-6/12 overflow-hidden rounded-[10px]">
+        {[1, 2, 3].map((el, index) => {
+          return (
+            <li
+              key={el}
+              className={`bg-darken-200 p-5 ${index !== 2 && 'border-b-2 border-lighten-100'}`}
+            >
+              <div className="flex items-center">
+                <img src="" className="h-10 w-10 rounded-full" />
+                <div className="flex flex-1 flex-col">
+                  <p className="text-lg font-bold text-lighten-600">Daniel J</p>
+                  <span className="text-sm text-lighten-500">
+                    Front-end Dev.
+                  </span>
+                </div>
+                <button className="flex h-9 w-9 items-center justify-center rounded-full bg-lighten-100">
+                  <Bookmark />
+                </button>
+              </div>
+              <div className="mb-3 mt-4 rounded-lg bg-primary p-[14px]">
+                <p className="text-xs text-lighten-600">
+                  hello everyone! Good evening. Today, I would like to share and
+                  resolve errors I found while coding the commerce payment
+                  process.
+                </p>
+              </div>
+              <div className="flex justify-end">
+                <button className="h-6 w-36 rounded-[4px] bg-lighten-100 text-sm font-bold text-lighten-600">
+                  원문 보기
+                </button>
               </div>
             </li>
           );
