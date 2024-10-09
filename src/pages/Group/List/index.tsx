@@ -17,6 +17,8 @@ import useLayout from '@/shared/hooks/useLayout';
 import contentApi from '@/shared/api/contentApi';
 import { ContentResponse } from '@/shared/types/contentType';
 import useLoadingStore from '@/shared/store/loading';
+import bookmarkApi from '@/shared/api/bookmarkApi';
+import { converterJson } from '@/shared/util/common';
 
 /* hook */
 
@@ -41,6 +43,31 @@ const GroupList: React.FC = () => {
       'bg-darken-300',
     ];
     return bgs[Math.abs(tabIdx - tabTypeIndex[tab])];
+  };
+
+  const handleBookmark = async (
+    type: 'CODE' | 'BOARD' | 'FILE',
+    contentId: number,
+    isBookmark: boolean,
+    idx: number,
+  ) => {
+    if (data.currentRepository?.folderId && data.currentGroupTab?.id)
+      if (!isBookmark) {
+        await bookmarkApi
+          .createBookmark({
+            groupId: data.currentGroupTab?.id,
+            type: type,
+            sectionId: data.currentRepository?.folderId,
+            contentId: contentId,
+          })
+          .then(() => {
+            const copyList: ContentResponse[] = converterJson(list);
+            copyList[idx].isBookmark = true;
+            setList(copyList);
+          });
+      } else {
+        alert('북마크 삭제!');
+      }
   };
 
   const getList = async (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
@@ -72,10 +99,12 @@ const GroupList: React.FC = () => {
           <Breadcrumb
             items={
               (data.currentRepository?.depth1 ?? '') +
-              '|' +
-              (data.currentRepository?.depth2 ?? '') +
-              '|' +
-              (data.currentRepository?.depth3 ?? '')
+              (data.currentRepository?.depth2
+                ? '|' + data.currentRepository?.depth2
+                : '') +
+              (data.currentRepository?.depth3
+                ? '|' + data.currentRepository?.depth3
+                : '')
             }
           />
         </div>
@@ -192,7 +221,16 @@ const GroupList: React.FC = () => {
                           {el.size}
                         </li>
                         <li className="flex w-20 items-center justify-center text-lighten-400">
-                          <button>
+                          <button
+                            onClick={() =>
+                              handleBookmark(
+                                el.type,
+                                el.contentId,
+                                el.isBookmark,
+                                idx,
+                              )
+                            }
+                          >
                             {el.isBookmark ? <BookmarkActive /> : <Bookmark />}
                           </button>
                         </li>

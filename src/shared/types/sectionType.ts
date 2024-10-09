@@ -8,8 +8,8 @@ export type RepositoryData = {
   folderId: number;
   name: string;
   depth1: string;
-  depth2: string;
-  depth3: string;
+  depth2?: string;
+  depth3?: string;
 };
 
 export type SectionData = {

@@ -15,7 +15,7 @@ export interface ContentResponse {
   writerName: string;
   createdDate: number;
   size: number;
-  type: string;
+  type: 'CODE' | 'BOARD' | 'FILE';
   isBookmark: true;
 }
 
