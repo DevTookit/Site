@@ -1,4 +1,5 @@
 /*svg */
+import DevToolKit from '@svg/icon_dev_tool_kit.svg?react';
 import Add from '@svg/icon_add.svg?react';
 import AddCircle from '@svg/icon_add_circle.svg?react';
 import Edit from '@svg/icon_edit.svg?react';
@@ -155,7 +156,7 @@ const GroupSideBar: React.FC = () => {
       >
         <div className="mb-3 flex">
           <div className="mr-2 h-6 w-6 rounded-[4px] bg-error">
-            {/* <img src="" alt="프로필 이미지" /> */}
+            <DevToolKit />
           </div>
           <h4>DEV.TOOLKIT</h4>
         </div>
@@ -222,11 +223,26 @@ const GroupSideBar: React.FC = () => {
         </div>
         <div className="flex-1 overflow-x-auto text-sm text-gray-400">
           <ul className="flex flex-col">
-            <li className="mb-2 flex h-10 cursor-pointer rounded-lg bg-primary p-2">
+            <li
+              className={`mb-2 flex h-10 cursor-pointer rounded-lg p-2 ${data.currentRepository?.folderId === -1 ? 'bg-lighten-100' : 'bg-primary'}`}
+            >
               <All className="mr-[10px]" />
-              <span className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]">
-                전체보기
-              </span>
+              <Link
+                to="/group/list"
+                className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]"
+                onClick={() =>
+                  setCurrentRepository({
+                    folderId: -1,
+                    name: '전체보기',
+                    depth1: data.currentGroupTab?.name ?? '',
+                    depth2: '전체보기',
+                  })
+                }
+              >
+                <span className="block flex-1 overflow-hidden text-ellipsis text-nowrap text-base text-[#D2D3D3]">
+                  전체보기
+                </span>
+              </Link>
             </li>
             {data.currentCategoryList.length ? (
               data.currentCategoryList.map((el, idx) => {

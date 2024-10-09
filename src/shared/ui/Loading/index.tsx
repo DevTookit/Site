@@ -12,14 +12,14 @@ const Loading: React.FC = () => {
   if (!isLoading) return null; // 로딩 중이 아닐 때는 아무것도 렌더링하지 않음
 
   return (
-    <div className="loader fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-30">
+    <div className="loader fixed inset-0 z-50 flex flex-col items-center justify-center bg-black bg-opacity-50">
       <div className="flex">
-        <IconLoading1 className="dot" />
-        <IconLoading2 className="dot" />
-        <IconLoading3 className="dot" />
-        <IconLoading4 className="dot" />
+        <IconLoading1 className="dot h-[46px] w-[46px]" />
+        <IconLoading3 className="dot h-[46px] w-[46px]" />
+        <IconLoading2 className="dot h-[46px] w-[46px]" />
+        <IconLoading4 className="dot h-[46px] w-[46px]" />
       </div>
-      <span className="text-lg text-lighten-600">loading...</span>
+      <span className="text-xl font-bold text-lighten-600">loading...</span>
     </div>
   );
 };

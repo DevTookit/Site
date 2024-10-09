@@ -34,6 +34,7 @@ function subscribeTokenRefresh(callback: (token: string) => void) {
 
 // 토큰이 갱신된 후 호출되는 함수
 function onRefreshed(token: string) {
+  console.log(refreshSubscribers);
   refreshSubscribers.forEach((callback) => callback(token));
   refreshSubscribers = []; // 모든 구독자 호출 후 초기화
 }
