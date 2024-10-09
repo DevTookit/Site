@@ -11,8 +11,10 @@ const FileSelectType: React.FC<FileSelectTypeProps> = ({
 }) => {
   return (
     <div className="rounded-t bg-primary p-10 pb-0">
-      <h4 className="mb-6 text-xl font-bold text-lighten-500">카테고리 추가</h4>
-      <span className="mb-2 inline-block text-base text-lighten-300">
+      <h4 className="mb-6 text-2xl font-bold text-lighten-500">
+        카테고리 추가
+      </h4>
+      <span className="mb-2 inline-block text-lg text-lighten-300">
         유형 선택
       </span>
       <RadioGroup className="mb-[14px] flex flex-col gap-2">
