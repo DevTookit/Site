@@ -26,7 +26,7 @@ const useLoadingStore = create<LoadingState>((set) => {
       } else {
         if (startTime) {
           const elapsedTime = Date.now() - startTime; // 경과 시간 계산
-          const remainingTime = Math.max(1000 - elapsedTime, 0); // 최소 0.5초 유지
+          const remainingTime = Math.max(500 - elapsedTime, 0); // 최소 0.5초 유지
 
           // 로딩이 최소 0.5초 유지되도록 대기
           timer = setTimeout(() => {

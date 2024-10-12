@@ -25,8 +25,16 @@ const createBookmark = async (
 };
 
 // 북마크 해제 (삭제) (DELETE)
-const deleteBookmark = async (bookmarkId: string): Promise<void> => {
-  await api.delete(`/v1/bookmarks/${bookmarkId}`);
+const deleteBookmark = async (
+  bookmarkId: number,
+  groupId: number,
+): Promise<void> => {
+  await api.delete(`/v1/bookmarks?bookmarkId=${bookmarkId}`, {
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    data: groupId,
+  });
 };
 
 const bookmarkApi = {

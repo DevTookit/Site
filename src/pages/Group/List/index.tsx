@@ -48,11 +48,11 @@ const GroupList: React.FC = () => {
   const handleBookmark = async (
     type: 'CODE' | 'BOARD' | 'FILE',
     contentId: number,
-    isBookmark: boolean,
+    bookmarkId: number | null,
     idx: number,
   ) => {
     if (data.currentRepository?.folderId && data.currentGroupTab?.id)
-      if (!isBookmark) {
+      if (!bookmarkId) {
         await bookmarkApi
           .createBookmark({
             groupId: data.currentGroupTab?.id,
@@ -60,13 +60,19 @@ const GroupList: React.FC = () => {
             sectionId: data.currentRepository?.folderId,
             contentId: contentId,
           })
-          .then(() => {
+          .then((res) => {
             const copyList: ContentResponse[] = converterJson(list);
-            copyList[idx].isBookmark = true;
+            copyList[idx].bookmarkId = res.bookmarkId;
             setList(copyList);
           });
       } else {
-        alert('북마크 삭제!');
+        await bookmarkApi
+          .deleteBookmark(bookmarkId, data.currentGroupTab?.id)
+          .then(() => {
+            const copyList: ContentResponse[] = converterJson(list);
+            copyList[idx].bookmarkId = null;
+            setList(copyList);
+          });
       }
   };
 
@@ -226,12 +232,12 @@ const GroupList: React.FC = () => {
                               handleBookmark(
                                 el.type,
                                 el.contentId,
-                                el.isBookmark,
+                                el.bookmarkId,
                                 idx,
                               )
                             }
                           >
-                            {el.isBookmark ? <BookmarkActive /> : <Bookmark />}
+                            {el.bookmarkId ? <BookmarkActive /> : <Bookmark />}
                           </button>
                         </li>
                       </ul>

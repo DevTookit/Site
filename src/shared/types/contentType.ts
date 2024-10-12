@@ -16,7 +16,7 @@ export interface ContentResponse {
   createdDate: number;
   size: number;
   type: 'CODE' | 'BOARD' | 'FILE';
-  isBookmark: true;
+  bookmarkId: number | null;
 }
 
 export interface SectionResponse {
