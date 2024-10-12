@@ -13,13 +13,29 @@ export type GroupResponse = {
   isPublic: boolean;
   userCnt: number;
 };
+export type HotGroupResponse = {
+  groupId: number;
+  groupName: string;
+  groupDescription: string;
+  groupImg: string;
+  groupUserCnt: number;
+  groupCreator: number;
+  groupCreatorName: string;
+  groupCreatorImg: string;
+  groupUserImgs: [
+    {
+      img: string;
+      groupUserId: number;
+    },
+  ];
+};
 
 export type LogResponse = {
   id: number;
   writerName: string;
   writerId: number;
   writerImg: string;
-  type: 'CODE | BOARD | FILE';
+  type: string;
   createdAt: number;
   contentName: string;
   contentId: number;

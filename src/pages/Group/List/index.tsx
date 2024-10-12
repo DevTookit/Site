@@ -2,6 +2,7 @@
 import TypeCode from '@svg/icon_type_code.svg?react';
 import TypeBoard from '@svg/icon_type_board.svg?react';
 import TypeFolder from '@svg/icon_type_folder.svg?react';
+import TypeFile from '@svg/icon_type_file.svg?react';
 import Bookmark from '@svg/icon_bookmark.svg?react';
 import BookmarkActive from '@svg/icon_bookmark_active.svg?react';
 // import BookmarkOn from '@svg/icon_bookmark_on.svg?react';
@@ -25,14 +26,14 @@ import { converterJson } from '@/shared/util/common';
 const GroupList: React.FC = () => {
   const setLoading = useLoadingStore((state) => state.setLoading);
   const { data } = useLayout();
-  const [tab, setTab] = useState<'CODE' | 'BOARD' | 'FILE' | ''>('');
+  const [tab, setTab] = useState<'CODE' | 'BOARD' | 'FOLDER' | ''>('');
   const [fileModalisOpen, setFileModalisOpen] = useState(false);
-  const [list, setList] = useState<ContentResponse[]>([]);
+  const [list, setList] = useState<any>([]);
 
   const onHandleTabBg = (tabIdx: number) => {
     const tabTypeIndex = {
       '': 0,
-      FILE: 1,
+      FOLDER: 1,
       CODE: 2,
       BOARD: 3,
     };
@@ -76,14 +77,26 @@ const GroupList: React.FC = () => {
       }
   };
 
-  const getList = async (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
+  const getList = async (tab: '' | 'CODE' | 'BOARD' | 'FOLDER') => {
     await contentApi
       .searchContent(data.currentGroupTab?.id ?? 0, tab)
       .then((res) => {
         setList(res);
       });
   };
-  const onClickTab = (tab: 'CODE' | 'BOARD' | 'FILE' | '') => {
+
+  const getFolderContents = async (folderId: number) => {
+    await contentApi
+      .getFolderContents(
+        data.currentGroupTab?.id ?? 0,
+        data.currentRepository?.folderId ?? 0,
+        folderId,
+      )
+      .then((res) => {
+        setList(res.contents);
+      });
+  };
+  const onClickTab = (tab: 'CODE' | 'BOARD' | '' | 'FOLDER') => {
     setLoading(true);
     setTab(tab);
     getList(tab);
@@ -130,7 +143,7 @@ const GroupList: React.FC = () => {
                 전체
               </li>
               <li
-                onClick={() => onClickTab('FILE')}
+                onClick={() => onClickTab('FOLDER')}
                 className={`flex h-[42px] w-[124px] cursor-pointer items-center justify-center rounded-t-xl text-lg font-bold text-lighten-400 ${onHandleTabBg(1)}`}
               >
                 폴더
@@ -183,11 +196,12 @@ const GroupList: React.FC = () => {
               </div>
             ) : (
               <ul className="w-full">
-                {list.map((el, idx) => {
+                {list.map((el: any, idx: number) => {
                   return (
                     <li
                       key={`list_${el.contentId}_${idx}`}
-                      className="h-16 w-full border border-lighten-100"
+                      className="h-16 w-full cursor-pointer border border-lighten-100 hover:bg-darken-100"
+                      onDoubleClick={() => getFolderContents(el.contentId)}
                     >
                       <ul className="flex h-full">
                         <li className="flex w-12 flex-shrink-0 items-center justify-center">
@@ -201,10 +215,10 @@ const GroupList: React.FC = () => {
                             <TypeBoard />
                           ) : el.type === 'CODE' ? (
                             <TypeCode />
-                          ) : el.type === 'FILE' ? (
+                          ) : el.type === 'FOLDER' ? (
                             <TypeFolder />
                           ) : (
-                            <></>
+                            <TypeFile />
                           )}
                         </li>
                         <li className="flex flex-[3] items-center justify-start text-lg font-bold text-lighten-500">

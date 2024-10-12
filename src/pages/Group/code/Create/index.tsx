@@ -47,6 +47,7 @@ const CodeEditor: React.FC = () => {
           content: code,
           codeDescription: description,
           type: 'CODE',
+          parentId: null,
         },
       )
       .then(() => {

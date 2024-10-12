@@ -30,6 +30,7 @@ const BlogEditor: React.FC = () => {
             content: content,
             codeDescription: '',
             type: 'BOARD',
+            parentId: null,
           },
         )
         .then(() => {

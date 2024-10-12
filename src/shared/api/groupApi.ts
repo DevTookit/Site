@@ -1,5 +1,10 @@
 import api from './axios';
-import { GroupResponse, LogResponse, GroupData } from '../types/groupType';
+import {
+  GroupResponse,
+  LogResponse,
+  GroupData,
+  HotGroupResponse,
+} from '../types/groupType';
 
 // 그룹 검색
 const getGroupList = async (): Promise<GroupResponse[]> => {
@@ -46,8 +51,10 @@ const getGroupById = async (groupId: string): Promise<GroupResponse> => {
 const getRecentFiles = async () => {};
 
 // 그룹내 로그 읽기
-const getGroupLogs = async (groupId: string): Promise<LogResponse[]> => {
-  const response = await api.get<LogResponse[]>(`/v1/groups/${groupId}/logs`);
+const getGroupLogs = async (groupId: number): Promise<LogResponse[]> => {
+  const response = await api.get<LogResponse[]>(
+    `/v1/groups/${groupId}/logs?page=0&size=20`,
+  );
   return response.data;
 };
 
@@ -68,8 +75,8 @@ const getMyJoinedGroupList = async (): Promise<GroupResponse[]> => {
 };
 
 // 메인 페이지 핫 그룹 조회
-const getHotGroupList = async (): Promise<GroupResponse[]> => {
-  const response = await api.get<GroupResponse[]>(
+const getHotGroupList = async (): Promise<HotGroupResponse[]> => {
+  const response = await api.get<HotGroupResponse[]>(
     '/v1/groups/hot?page=0&size=20',
   );
   return response.data;

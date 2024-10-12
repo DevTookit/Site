@@ -8,7 +8,7 @@ import { useState, useEffect, DragEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /* api */
-import folderApi from '@/shared/api/folderApi';
+import contentApi from '@/shared/api/contentApi';
 import useLayout from '@/shared/hooks/useLayout';
 import useLoadingStore from '@/shared/store/loading';
 
@@ -60,13 +60,18 @@ const CreateFileModal: React.FC<CreateFileModalProps> = ({
 
   const handleSave = async () => {
     setLoading(true);
-    await folderApi
-      .createFolder(
+    await contentApi
+      .createContent(
         data.currentGroupTab?.id ?? 0,
         data.currentRepository?.folderId ?? 0,
         {
-          parentFolderId: 0,
           name: folderName,
+          languages: [],
+          skills: [],
+          content: '',
+          codeDescription: '',
+          type: 'FOLDER',
+          parentId: null,
         },
         files,
       )

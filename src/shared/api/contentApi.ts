@@ -2,6 +2,7 @@ import api from './axios';
 import {
   ContentData,
   ContentResponse,
+  FolderContentResponse,
   HotContentResponse,
   // SearchContentParams,
 } from '@/shared/types/contentType'; // 필요한 타입을 정의합니다.
@@ -11,6 +12,7 @@ export const createContent = async (
   groupId: number,
   sectionId: number,
   contentData: ContentData,
+  files?: File[],
 ): Promise<ContentResponse> => {
   const formData = new FormData();
   formData.append(
@@ -22,9 +24,17 @@ export const createContent = async (
       content: contentData.content,
       codeDescription: contentData.codeDescription,
       type: contentData.type,
+      parentId: contentData?.parentId ?? null,
     }),
   );
-  formData.append('files', '');
+  if (files) {
+    files.forEach((file) => {
+      console.log(file);
+      formData.append('files', file); // 각 파일을 개별적으로 추가
+    });
+  } else {
+    formData.append('files', '');
+  }
 
   const response = await api.post<ContentResponse>(
     `/v1/contents/${groupId}/${sectionId}`,
@@ -63,7 +73,7 @@ export const updateContent = async (
 // 4. 컨텐츠 검색 (코드, 게시판형, 파일)
 export const searchContent = async (
   groupId: number, // searchParams: SearchContentParams,
-  type: 'CODE' | 'BOARD' | 'FILE' | '',
+  type: 'CODE' | 'BOARD' | 'FOLDER' | '',
 ): Promise<ContentResponse[]> => {
   const response = await api.get<ContentResponse[]>(
     `/v1/contents?groupId=${groupId}&page=0&size=20${type && `&type=${type}`}`,
@@ -88,6 +98,19 @@ export const getHotContents = async (): Promise<HotContentResponse[]> => {
   const response = await api.get<HotContentResponse[]>('/v1/contents/hot');
   return response.data;
 };
+
+// 7. 폴더유형탭 파일안에 폴더+ 파일 읽기
+export const getFolderContents = async (
+  groupId: number,
+  sectionId: number,
+  folderId: number,
+): Promise<FolderContentResponse> => {
+  const response = await api.get<FolderContentResponse>(
+    `/v1/contents/folders/${groupId}/${sectionId}/${folderId}?page=0&size=20'`,
+  );
+  return response.data;
+};
+
 const contentApi = {
   createContent,
   deleteContent,
@@ -95,6 +118,7 @@ const contentApi = {
   searchContent,
   getContent,
   getHotContents,
+  getFolderContents,
 };
 
 export default contentApi;

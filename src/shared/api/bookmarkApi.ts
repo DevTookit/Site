@@ -6,7 +6,7 @@ import {
 import api from './axios';
 
 // 북마크 읽기 (GET)
-const getBookmarks = async (groupId: string): Promise<BookmarkResponse[]> => {
+const getBookmarks = async (groupId: number): Promise<BookmarkResponse[]> => {
   const response = await api.get<BookmarkResponse[]>(
     `/v1/bookmarks?groupId=${groupId}&page=0&size=20`,
   );

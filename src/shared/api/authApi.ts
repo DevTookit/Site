@@ -175,6 +175,17 @@ const findUserEmail = async (
   return response.data;
 };
 
+const checkOnboardingStatus = async () => {
+  const response = await api.get('/v1/users/onboarding');
+  return response.data;
+};
+
+//온보딩 완료
+const successOnboarding = async () => {
+  const response = await api.patch('/v1/users/onboarding?isOnBoarding=true');
+  return response.data;
+};
+
 const authApi = {
   getVerifyEmail,
   issueToken,
@@ -186,6 +197,8 @@ const authApi = {
   resetPassword,
   getMyInfo,
   findUserEmail,
+  checkOnboardingStatus,
+  successOnboarding,
 };
 
 export default authApi;

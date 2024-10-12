@@ -1,10 +1,39 @@
 /* svg */
-import Person from '@svg/icon_person.svg?react';
+import ErrorRoudned from '@svg/icon_error_rounded.svg?react';
+import Menu from '@svg/icon_menu.svg?react';
 import BookmarkActive from '@svg/icon_bookmark_active.svg?react';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
+import { useEffect, useState } from 'react';
+
+/* api */
+import groupApi from '@/shared/api/groupApi';
+import bookmarkApi from '@/shared/api/bookmarkApi';
+
+import { LogResponse } from '@/shared/types/groupType';
+import { formatTimeAgo } from '@/shared/util/common';
+import { BookmarkResponse } from '@/shared/types/bookmark';
+
 const GroupMain: React.FC = () => {
   const { data } = useLayout();
+
+  const [logs, setLogs] = useState<LogResponse[]>([]);
+  const [bookmarks, setBookmarks] = useState<BookmarkResponse[]>([]);
+
+  const init = async () => {
+    Promise.all([
+      groupApi.getGroupLogs(data.currentGroupTab?.id ?? 0).then((res) => {
+        setLogs(res);
+      }),
+      bookmarkApi.getBookmarks(data.currentGroupTab?.id ?? 0).then((res) => {
+        setBookmarks(res);
+      }),
+    ]);
+  };
+
+  useEffect(() => {
+    init();
+  }, [data.currentGroupTab]);
   return (
     <div className="w-full flex-1">
       <div className="flex items-center text-sm">
@@ -12,24 +41,48 @@ const GroupMain: React.FC = () => {
           그룹 대시보드 &gt; {data.currentGroupTab?.name}
         </span>
       </div>
-      <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[20px] bg-black">
-        <img className="h-full w-full" src="" alt="그룹 이미지" />
+      <div className="mt-[10px] flex overflow-hidden rounded-lg bg-darken-200">
+        <div className="mx-3 flex items-center">
+          <ErrorRoudned className="mr-2" />
+          <span className="text-lg font-medium text-lighten-500">공지</span>
+        </div>
+        <div className="flex flex-1 items-center bg-darken-100">
+          <span className="flex-1 text-base text-lighten-400">
+            Hey, guys! Assignment for this week 1 should be uploaded at Code
+            files due to 24th , Oct 16:00!
+          </span>
+          <img
+            className="mr-1 h-6 w-6 rounded-full"
+            src={data.currentGroupTab?.img}
+            alt="공지 작성자"
+          />
+          <span className="mr-8 text-base text-lighten-500">Jack</span>
+          <span className="mr-6 text-sm text-lighten-300">24.09.27</span>
+          <Menu />
+        </div>
+      </div>
+      {/* <div className="relative mt-5 h-[300px] w-full overflow-hidden rounded-[20px] bg-black">
+        <img
+          className="h-full w-full"
+          src={data.currentGroupTab?.img}
+          alt="그룹 이미지"
+        />
         <div className="absolute bottom-[30px] left-[30px]">
           <div className="mb-1 flex">
             <img
               className="mr-1 h-7 w-7 rounded-full"
-              src=""
+              src={data.currentGroupTab?.img}
               alt="그룹 생성자 프로필 이미지"
             />
-            <span className="text-2xl text-lighten-400">Jack F. Eron</span>
+            <span className="text-2xl text-lighten-400">우인우</span>
           </div>
           <div className="mb-3">
             <p className="text-[32px] font-bold text-lighten-600">
-              Junior Coders
+              {data.currentGroupTab?.name}
             </p>
           </div>
           <span className="text-base text-lighten-400">
-            We’re gathering to study as Junior Developers!
+            {data.currentGroupTab?.description}
           </span>
         </div>
         <div className="absolute bottom-[30px] right-[30px] flex">
@@ -55,7 +108,7 @@ const GroupMain: React.FC = () => {
             })}
           </ul>
         </div>
-      </div>
+      </div> */}
       <div className="mt-3 flex gap-9">
         <div className="flex-1">
           <h4 className="mb-[14px] text-xl font-bold text-lighten-500">
@@ -70,14 +123,14 @@ const GroupMain: React.FC = () => {
             북마크 목록
           </h4>
           <ul className="flex flex-wrap gap-[2%]">
-            {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((el, index) => {
+            {bookmarks.map((el, index) => {
               return (
                 <li
                   key={`bookmark_lst_${index}`}
                   className="mb-2 flex h-10 w-[48%] items-center justify-between rounded-lg bg-darken-200 px-3 py-2"
                 >
                   <span className="overflow-hidden text-ellipsis text-nowrap text-base text-lighten-500">
-                    Java Script 코딩의 이해-2-_240
+                    {el.name}
                   </span>
                   <BookmarkActive />
                 </li>
@@ -87,37 +140,31 @@ const GroupMain: React.FC = () => {
         </div>
         <div className="flex-1">
           <h4 className="mb-[14px] text-xl font-bold text-lighten-500">로그</h4>
-          <ul className="overflow-hidden rounded-[10px]">
-            {[1, 2, 3].map((el, index) => {
+          <ul className="overflow-hidden rounded-[10px] bg-darken-200 p-[14px]">
+            {logs.map((el, index) => {
               return (
                 <li
-                  key={el}
-                  className={`bg-darken-200 p-5 ${index !== 2 && 'border-b-2 border-lighten-100'}`}
+                  key={`logs_${index}`}
+                  className={`bg-darken-200 p-3 ${index !== 2 && 'border-b-[1px] border-primary'}`}
                 >
                   <div className="flex items-center">
-                    <img src="" className="h-10 w-10 rounded-full" />
+                    <img
+                      src={el.writerImg}
+                      className="mr-2 h-6 w-6 rounded-full"
+                    />
                     <div className="flex flex-1 flex-col">
-                      <p className="text-lg font-bold text-lighten-600">
-                        Daniel J
+                      <p className="flex justify-between text-base text-lighten-400">
+                        {el.writerName}
+                        <span className="text-sm text-lighten-200">
+                          {formatTimeAgo(el.createdAt)}
+                        </span>
                       </p>
-                      <span className="text-sm text-lighten-500">
-                        Front-end Dev.
-                      </span>
+                      <span className="text-sm text-lighten-500"></span>
                     </div>
-                    <button className="flex h-9 w-9 items-center justify-center rounded-full bg-lighten-100"></button>
                   </div>
-                  <div className="mb-3 mt-4 rounded-lg bg-primary p-[14px]">
-                    <p className="text-xs text-lighten-600">
-                      hello everyone! Good evening. Today, I would like to share
-                      and resolve errors I found while coding the commerce
-                      payment process.
-                    </p>
-                  </div>
-                  <div className="flex justify-end">
-                    <button className="h-6 w-36 rounded-[4px] bg-lighten-100 text-sm font-bold text-lighten-600">
-                      원문 보기
-                    </button>
-                  </div>
+                  <p className="ml-7 mt-2 text-base font-medium text-lighten-500">
+                    "{el.contentName}" 게시물이 등록되었습니다.
+                  </p>
                 </li>
               );
             })}

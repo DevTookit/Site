@@ -4,7 +4,8 @@ export interface ContentData {
   skills: string[];
   content: string;
   codeDescription: string;
-  type: 'CODE' | 'BOARD' | 'FILE';
+  type: 'CODE' | 'BOARD' | 'FOLDER';
+  parentId: number | null;
 }
 
 export interface ContentResponse {
@@ -27,10 +28,14 @@ export interface SectionResponse {
 }
 
 export interface HotContentResponse {
-  id: number;
-  title: string;
-  viewCount: number;
-  // 기타 핫 컨텐츠 관련 필드
+  content: string;
+  contentId: number;
+  contentName: string;
+  groupId: number;
+  section: number;
+  writerId: number;
+  writerImg: string;
+  writerName: string;
 }
 
 export interface SearchContentParams {
@@ -38,4 +43,26 @@ export interface SearchContentParams {
   limit?: number;
   offset?: number;
   // 기타 검색 관련 필드
+}
+
+export interface FolderContentResponse {
+  parentId: number;
+  createdDate: number;
+  lastModifiedDate: number;
+  name: string;
+  writerName: string;
+  writerId: number;
+  type: string;
+  contents: Content[];
+}
+
+interface Content {
+  contentId: number;
+  createdDate: number;
+  lastModifiedDate: number;
+  name: string;
+  writerName: string;
+  writerId: number;
+  type: string;
+  url: string;
 }

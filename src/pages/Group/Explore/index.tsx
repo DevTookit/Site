@@ -1,6 +1,6 @@
 /* svg */
 import Bookmark from '@svg/icon_bookmark.svg?react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import useLoadingStore from '@/shared/store/loading';
 // import BookmarkActive from '@svg/icon_bookmark_active.svg?react';
 /* component */
@@ -8,15 +8,44 @@ import useLoadingStore from '@/shared/store/loading';
 
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
-// import useAuthStore from '@/shared/store/authStore';
+import useAuthStore from '@/shared/store/authStore';
+/* api */
+import authApi from '@/shared/api/authApi';
+import groupApi from '@/shared/api/groupApi';
+import contentApi from '@/shared/api/contentApi';
+import { HotGroupResponse } from '@/shared/types/groupType';
+import { HotContentResponse } from '@/shared/types/contentType';
 
 const GroupExplore: React.FC = () => {
   const setLoading = useLoadingStore((state) => state.setLoading);
   const { setOnboardingStep } = useLayout();
-  // const { userName, isOnBoardingComplete } = useAuthStore();
+  const { isOnBoardingComplete, setOnBoardingComplete } = useAuthStore();
+
+  //? state
+  const [hotGroupList, setHotGroupList] = useState<HotGroupResponse[]>([]);
+  const [hotContentList, setHotContentList] = useState<HotContentResponse[]>(
+    [],
+  );
+
+  const init = async () => {
+    await Promise.all([
+      groupApi.getHotGroupList().then((res) => {
+        setHotGroupList(res);
+      }),
+      contentApi.getHotContents().then((res) => {
+        setHotContentList(res);
+      }),
+    ]);
+  };
+
   useEffect(() => {
     setLoading(true);
-    setOnboardingStep(5);
+    if (!isOnBoardingComplete) {
+      authApi.successOnboarding();
+      setOnBoardingComplete(true);
+      setOnboardingStep(5);
+    }
+    init();
     setLoading(false);
   }, []);
   return (
@@ -29,42 +58,49 @@ const GroupExplore: React.FC = () => {
         최신 핫 그룹 🔥
       </p>
       <ul className="flex gap-[10px] overflow-x-auto scrollbar-hide">
-        {[1, 2, 3, 4, 5].map((el) => {
+        {hotGroupList.map((el, idx) => {
           return (
             <li
-              key={el}
+              key={`hot_list_${idx}`}
               className="flex h-60 min-w-64 flex-col overflow-hidden rounded-[10px] bg-darken-200"
             >
-              <img src="" alt="그룹 이미지" className="h-20 bg-white" />
+              <img
+                src={el.groupImg}
+                alt="그룹 이미지"
+                className="h-20 bg-white"
+              />
               <div className="flex-1 p-[10px]">
                 <div className="flex justify-between">
                   <img
-                    src=""
-                    alt=""
+                    src={el.groupCreatorImg}
+                    alt="그룹 생성자 이미지"
                     className="h-[26px] w-[26px] rounded-full border-[1px] border-lighten-600"
                   />
                   <div className="relative flex h-[26px] w-20 items-center justify-end rounded-full bg-lighten-100 p-1">
-                    {[1, 2, 3].map((el, idx) => {
+                    {el.groupUserImgs.map((userImg, idx) => {
                       const leftPosition = `${4 + idx * 12}px`; // 동적으로 left 값을 계산
                       return (
                         <img
-                          key={el}
-                          src=""
-                          alt=""
+                          key={`user_img_${idx}`}
+                          src={userImg.img}
+                          alt="그룹 내 유저 이미지"
                           className={`border-1 absolute top-1 h-[16px] w-[16px] rounded-full border-[1px] border-lighten-600`}
                           style={{ left: leftPosition, zIndex: idx }} // style 속성으로 동적 left 적용
                         />
                       );
                     })}
-                    <span className="text-[10px] text-lighten-600">+ 20</span>
+                    {el.groupUserCnt > 4 && (
+                      <span className="text-[10px] text-lighten-600">
+                        + {el.groupUserCnt - 3}
+                      </span>
+                    )}
                   </div>
                 </div>
                 <p className="mt-3 text-base font-bold text-lighten-600">
-                  Junior Coders
+                  {el.groupName}
                 </p>
                 <span className="line-clamp-2 overflow-hidden text-ellipsis text-[14px] text-lighten-400">
-                  주니어 개발자들을 위한 코딩 커뮤니티 입니다. 매일 개발관련
-                  지식을 보내드려요!
+                  {el.groupDescription}
                 </span>
 
                 <div className="mt-2 flex justify-end">
@@ -78,21 +114,26 @@ const GroupExplore: React.FC = () => {
         })}
       </ul>
       <p className="my-6 text-2xl font-bold text-lighten-500">
-        트랜디 추천 게시물 ✍🏻
+        트렌디 추천 게시물 ✍🏻
       </p>
-      <ul className="w-6/12 overflow-hidden rounded-[10px]">
-        {[1, 2, 3].map((el, index) => {
+      <ul className="flex flex-wrap gap-2 overflow-hidden rounded-[10px]">
+        {hotContentList.map((el, index) => {
           return (
             <li
-              key={el}
-              className={`bg-darken-200 p-5 ${index !== 2 && 'border-b-2 border-lighten-100'}`}
+              key={`hot_content_${index}}`}
+              className={`min-w-[40%] max-w-[50%] flex-1 bg-darken-200 p-5 ${index !== 9999 && 'border-b-2 border-lighten-100'}`}
             >
               <div className="flex items-center">
-                <img src="" className="h-10 w-10 rounded-full" />
+                <img
+                  src={el.writerImg}
+                  className="mr-2 h-10 w-10 rounded-full"
+                />
                 <div className="flex flex-1 flex-col">
-                  <p className="text-lg font-bold text-lighten-600">Daniel J</p>
+                  <p className="text-lg font-bold text-lighten-600">
+                    {el.writerName}
+                  </p>
                   <span className="text-sm text-lighten-500">
-                    Front-end Dev.
+                    web developer
                   </span>
                 </div>
                 <button className="flex h-9 w-9 items-center justify-center rounded-full bg-lighten-100">
@@ -100,11 +141,7 @@ const GroupExplore: React.FC = () => {
                 </button>
               </div>
               <div className="mb-3 mt-4 rounded-lg bg-primary p-[14px]">
-                <p className="text-xs text-lighten-600">
-                  hello everyone! Good evening. Today, I would like to share and
-                  resolve errors I found while coding the commerce payment
-                  process.
-                </p>
+                <p className="text-xs text-lighten-600">{el.content}</p>
               </div>
               <div className="flex justify-end">
                 <button className="h-6 w-36 rounded-[4px] bg-lighten-100 text-sm font-bold text-lighten-600">

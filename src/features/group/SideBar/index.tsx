@@ -174,7 +174,7 @@ const GroupSideBar: React.FC = () => {
             <Edit className="h-5 w-5" />
           </button>
         </div>
-        <div className="mb-[35px] flex gap-1">
+        <div className="flex gap-1">
           {data.myJoinedGroupList.map((el, idx) => {
             return (
               <button
@@ -209,6 +209,12 @@ const GroupSideBar: React.FC = () => {
             <ExploreRounded className="h-10 w-10 rounded-full" />
           </button>
         </div>
+        <p
+          className="mb-6 mt-3 cursor-pointer text-xl font-bold text-lighten-500"
+          onClick={() => onClickGroupTab(groupTab)}
+        >
+          {data.currentGroupTab?.name}
+        </p>
         {/* Category List */}
         <div className="mb-2 flex justify-between">
           <p className="text-lg font-medium text-[#B4B5B5]">category</p>

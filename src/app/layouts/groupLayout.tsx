@@ -5,6 +5,7 @@ import GroupHeader from '@/features/group/Header';
 import CreateGroupModal from '@/features/group/modal/CreateGroup';
 import CreateCategoryModal from '@/features/category/modal/CreateCategory';
 import useLayout from '@/shared/hooks/useLayout';
+import authApi from '@/shared/api/authApi';
 import groupApi from '@/shared/api/groupApi';
 import sectionApi from '@/shared/api/sectionApi';
 import contentApi from '@/shared/api/contentApi';
@@ -16,7 +17,7 @@ import useLoadingStore from '@/shared/store/loading';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const setLoading = useLoadingStore((state) => state.setLoading);
-  const { isOnBoardingComplete } = useAuthStore();
+  const { isOnBoardingComplete, setOnBoardingComplete } = useAuthStore();
   const {
     data,
     setMyJoinedGroupList,
@@ -42,6 +43,13 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     init();
   });
   const checkOnboarding = async () => {
+    const onboardingStatus = await authApi.checkOnboardingStatus();
+    if (onboardingStatus) {
+      setOnBoardingComplete(true);
+      setOnboardingStep(5);
+      return;
+    }
+
     let step = data.onboardingStep;
     if (step === 1 && data.myJoinedGroupList.length > 0) step += 1;
     if (step === 2 && data.currentCategoryList.length > 0) {

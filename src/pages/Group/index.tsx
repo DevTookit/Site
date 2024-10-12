@@ -25,8 +25,10 @@ const Group: React.FC = () => {
           </p>
           <GroupOnboarding />
         </section>
-      ) : (
+      ) : data.currentGroupTab ? (
         <GroupMain />
+      ) : (
+        <></>
       )}
     </>
   );
