@@ -66,12 +66,11 @@ const SignUp: React.FC = () => {
 
   const onClickEmailVerificationStatus = () => {
     if (validateForm()) {
-      setFormStatus('codeSent');
-      // authApi
-      //   .createUser({ name, email, password, job: '', tag: [''] })
-      //   .then(() => {
-      //     setFormStatus('codeSent');
-      //   });
+      authApi
+        .createUser({ name, email, password, job: '', tag: [''] })
+        .then(() => {
+          setFormStatus('codeSent');
+        });
     }
   };
 

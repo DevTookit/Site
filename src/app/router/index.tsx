@@ -31,6 +31,7 @@ const AppRouter: React.FC = () => {
   const location = useLocation();
 
   useEffect(() => {
+    if (location.pathname.includes('/auth/')) return;
     const token = getToken();
     const refreshToken = getRefreshToken();
     if (refreshToken && !token) {
