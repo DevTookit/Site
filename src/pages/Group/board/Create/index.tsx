@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { Editor } from '@tinymce/tinymce-react';
 import useLayout from '@/shared/hooks/useLayout';
 import Breadcrumb from '@/shared/ui/group/BreadCrumb';
@@ -6,8 +6,10 @@ import Breadcrumb from '@/shared/ui/group/BreadCrumb';
 import SkillInput from '@/features/input/Skill';
 import contentApi from '@/shared/api/contentApi';
 import { useNavigate } from 'react-router-dom';
+import useLoadingStore from '@/shared/store/loading';
 
 const BlogEditor: React.FC = () => {
+  const setLoading = useLoadingStore((state) => state.setLoading);
   const navigate = useNavigate();
   const { data } = useLayout();
   const editorRef = useRef<any>(null);
@@ -39,6 +41,10 @@ const BlogEditor: React.FC = () => {
     }
   };
 
+  useEffect(() => {
+    setLoading(true);
+  }, []);
+
   return (
     <div className="flex w-full flex-1 flex-col">
       <div className="mb-1 mt-6 flex justify-start">
@@ -64,12 +70,17 @@ const BlogEditor: React.FC = () => {
         />
         <Editor
           apiKey={import.meta.env.VITE_TINY_MCE_API_KEY}
-          onInit={(evt, editor) => (editorRef.current = editor)}
+          onInit={(evt, editor) => {
+            editorRef.current = editor;
+            setLoading(false);
+          }}
           initialValue="Start writing your blog..."
           init={{
             branding: false,
             height: 600,
             menubar: true,
+            skin: 'oxide-dark', // 다크 스킨 사용
+            content_css: 'dark', // 에디터 내부 콘텐츠에도 다크 테마 적용
             plugins: [
               'advlist autolink lists link image charmap anchor',
               'searchreplace visualblocks code fullscreen',

@@ -31,6 +31,12 @@ export type HotGroupResponse = {
 };
 
 export type LogResponse = {
+  creatorId: 10;
+  creatorImg: 'https://d9fvxknq2fy2f.cloudfront.net/PROFILE/7213c3b9-affb-42ae-87ca-fe47e5ed4723.jpeg';
+  creatorName: '우인우2';
+  logs: Log[];
+};
+export type Log = {
   id: number;
   writerName: string;
   writerId: number;

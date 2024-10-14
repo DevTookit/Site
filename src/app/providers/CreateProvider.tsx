@@ -24,7 +24,6 @@ export const CreateProvider: React.FC<{ children: ReactNode }> = ({
       ...prevData,
       createGroup: { ...prevData.createGroup, ...newData },
     }));
-    console.log('createGroup : ', { ...createData.createGroup, ...newData });
   };
   const submitGroupCreate = async () => {
     groupApi

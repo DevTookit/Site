@@ -130,10 +130,14 @@ const GroupList: React.FC = () => {
         <h4 className="text-[32px] font-bold text-lighten-600">
           {data.currentRepository?.name}
         </h4>
-        <div className="mb-[6px] mt-6 flex justify-between">
-          <UploadButton onClickFn={() => setFileModalisOpen(true)} />
-        </div>
-        <div className="flex flex-1 items-center justify-center">
+        {(data.currentRepository?.folderId ?? 0) > 0 ? (
+          <div className="mt-6 flex justify-between">
+            <UploadButton onClickFn={() => setFileModalisOpen(true)} />
+          </div>
+        ) : (
+          <></>
+        )}
+        <div className="mt-[6px] flex flex-1 items-center justify-center">
           <div className="mt-3 flex h-full w-full flex-col items-start">
             <ul className="flex">
               <li
@@ -235,10 +239,10 @@ const GroupList: React.FC = () => {
                           {el.writerName}
                         </li>
                         <li className="flex flex-1 items-center justify-center text-lighten-400">
-                          {format(new Date(el.createdDate), 'yyyy.mm.dd')}
+                          {format(new Date(el.createdDate), 'yyyy.MM.dd')}
                         </li>
                         <li className="flex flex-1 items-center justify-center text-lighten-400">
-                          {el.size}
+                          {el?.size}
                         </li>
                         <li className="flex w-20 items-center justify-center text-lighten-400">
                           <button

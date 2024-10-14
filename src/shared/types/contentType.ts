@@ -56,7 +56,7 @@ export interface FolderContentResponse {
   contents: Content[];
 }
 
-interface Content {
+export interface Content {
   contentId: number;
   createdDate: number;
   lastModifiedDate: number;

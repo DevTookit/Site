@@ -1,5 +1,5 @@
 // src/components/Layout.tsx
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import GroupSideBar from '@/features/group/SideBar';
 import GroupHeader from '@/features/group/Header';
 import CreateGroupModal from '@/features/group/modal/CreateGroup';
@@ -16,6 +16,7 @@ import useGroupPathEffect from '@/shared/hooks/useGroupPathEffect';
 import useLoadingStore from '@/shared/store/loading';
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [initState, setInitState] = useState(false);
   const setLoading = useLoadingStore((state) => state.setLoading);
   const { isOnBoardingComplete, setOnBoardingComplete } = useAuthStore();
   const {
@@ -30,9 +31,10 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     if (!data.myJoinedGroupList.length) {
       await groupApi.getMyJoinedGroupList().then(async (res) => {
         setMyJoinedGroupList(res);
-        await sectionApi.getSections(res[0].id).then((res) => {
-          setCurrentCategoryList(res);
-        });
+        if (res.length)
+          await sectionApi.getSections(res[0].id).then((res) => {
+            setCurrentCategoryList(res);
+          });
       });
       setCurrentRepository(null); //선택된 저장소 해제
     }
@@ -44,6 +46,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   });
   const checkOnboarding = async () => {
     const onboardingStatus = await authApi.checkOnboardingStatus();
+    console.log(2);
     if (onboardingStatus) {
       setOnBoardingComplete(true);
       setOnboardingStep(5);
@@ -68,12 +71,25 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         });
     }
     setLoading(false);
+    // alert(`step 업데이트!  ${step}`);
     if (data.onboardingStep < step) setOnboardingStep(step);
   };
 
   useEffect(() => {
-    if (!isOnBoardingComplete) checkOnboarding();
-  }, [data.myJoinedGroupList, data.currentCategoryList, data.onboardingStep]);
+    const initAppData = async () => {
+      if (!isOnBoardingComplete) {
+        await checkOnboarding();
+      }
+      console.log(1);
+      setInitState(true);
+    };
+    initAppData();
+  }, [
+    data.myJoinedGroupList,
+    data.currentCategoryList,
+    data.currentCategoryChildList,
+    data.onboardingStep,
+  ]);
 
   return (
     <div className="flex min-h-screen w-full">
@@ -84,7 +100,7 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
       <GroupSideBar />
       <main className="flex min-h-screen flex-1 flex-grow flex-col items-center justify-between overflow-hidden bg-primary px-10 pb-5 pt-[60px]">
         <GroupHeader />
-        {children}
+        {initState && children}
       </main>
     </div>
   );

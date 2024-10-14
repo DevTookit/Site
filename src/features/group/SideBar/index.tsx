@@ -110,7 +110,6 @@ const GroupSideBar: React.FC = () => {
   const getSections = async (groupId: number) => {
     await sectionApi.getSections(groupId).then(async (res) => {
       setCurrentCategoryList(res);
-
       if (res.length === 0) {
         await sectionApi.createSection({
           groupId: groupId,
@@ -127,10 +126,9 @@ const GroupSideBar: React.FC = () => {
   const onClickGroupTab = async (tab: number) => {
     setCurrentGroupTab(data.myJoinedGroupList[tab]);
     setGroupTab(tab);
-    if (groupTab !== tab) {
-      const groupId = data.myJoinedGroupList[tab].id;
-      await getSections(groupId);
-    }
+    const groupId = data.myJoinedGroupList[tab].id;
+    await getSections(groupId);
+
     navigate('/group');
   };
 
@@ -330,7 +328,15 @@ const GroupSideBar: React.FC = () => {
                               <Link
                                 key={`repository_${idx}`}
                                 to="/group/list"
-                                className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2"
+                                className={`relative flex h-10 w-full cursor-pointer rounded-lg p-2 ${data.currentRepository?.folderId === el3.folderId ? 'bg-lighten-100' : 'bg-primary'}`}
+                                onClick={() =>
+                                  setCurrentRepository({
+                                    folderId: el3.folderId,
+                                    name: el3.name,
+                                    depth1: el.name,
+                                    depth2: el2.name,
+                                  })
+                                }
                               >
                                 <FolderRounded className="mr-[10px]" />
                                 <span
@@ -346,7 +352,14 @@ const GroupSideBar: React.FC = () => {
                       ) : (
                         <Link
                           to="/group/list"
-                          className="relative flex h-10 w-full cursor-pointer rounded-lg bg-primary p-2"
+                          className={`relative flex h-10 w-full cursor-pointer rounded-lg p-2 ${data.currentRepository?.folderId === el2.folderId ? 'bg-lighten-100' : 'bg-primary'}`}
+                          onClick={() =>
+                            setCurrentRepository({
+                              folderId: el2.folderId,
+                              name: el2.name,
+                              depth1: el.name,
+                            })
+                          }
                         >
                           <FolderRounded className="mr-[10px]" />
                           <span

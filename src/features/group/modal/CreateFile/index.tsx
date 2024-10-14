@@ -20,7 +20,7 @@ const CreateFileModal: React.FC<CreateFileModalProps> = ({
   isOpen,
   setIsOpen,
 }) => {
-  const { data } = useLayout();
+  const { data, setOnboardingStep } = useLayout();
   const setLoading = useLoadingStore((state) => state.setLoading);
   const navigate = useNavigate();
   const [fileType, setFileType] = useState<'folder' | 'code' | 'post'>(
@@ -51,7 +51,6 @@ const CreateFileModal: React.FC<CreateFileModalProps> = ({
       return;
     }
     const droppedFiles = Array.from(e.dataTransfer.files);
-    console.log(droppedFiles);
     setFiles((prevFiles) => [...prevFiles, ...droppedFiles]);
   };
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -77,7 +76,7 @@ const CreateFileModal: React.FC<CreateFileModalProps> = ({
       )
       .then(() => {
         setIsOpen(false);
-        setLoading(false);
+        if (data.onboardingStep === 3) setOnboardingStep(4);
       });
     setLoading(false);
   };

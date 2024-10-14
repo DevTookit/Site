@@ -51,8 +51,8 @@ const getGroupById = async (groupId: string): Promise<GroupResponse> => {
 const getRecentFiles = async () => {};
 
 // 그룹내 로그 읽기
-const getGroupLogs = async (groupId: number): Promise<LogResponse[]> => {
-  const response = await api.get<LogResponse[]>(
+const getGroupLogs = async (groupId: number): Promise<LogResponse> => {
+  const response = await api.get<LogResponse>(
     `/v1/groups/${groupId}/logs?page=0&size=20`,
   );
   return response.data;

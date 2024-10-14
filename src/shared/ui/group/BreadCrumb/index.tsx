@@ -10,14 +10,19 @@ interface BreadcrumbProps {
 }
 
 const Breadcrumb: React.FC<BreadcrumbProps> = ({ items }) => {
+  console.log('items : ', items);
   return (
     <nav aria-label="breadcrumb" className="flex">
-      {items.split('|').map((item, index) => (
-        <div key={index} className="flex items-center text-sm">
-          {index !== 0 && <span className="mx-2 text-lighten-400">/</span>}
-          <span className="text-lighten-400 hover:underline">{item}</span>
-        </div>
-      ))}
+      {items.split('|').map((item, index) =>
+        item ? (
+          <div key={index} className="flex items-center text-sm">
+            {index !== 0 && <span className="mx-2 text-lighten-400">/</span>}
+            <span className="text-lighten-400 hover:underline">{item}</span>
+          </div>
+        ) : (
+          <></>
+        ),
+      )}
     </nav>
   );
 };

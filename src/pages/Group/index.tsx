@@ -5,16 +5,18 @@ import GroupMain from '@/features/group/Main';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
 import useAuthStore from '@/shared/store/authStore';
+import { useEffect } from 'react';
 
 const Group: React.FC = () => {
-  const { data } = useLayout();
-  const { userName, isOnBoardingComplete } = useAuthStore();
+  const { data, setCurrentRepository } = useLayout();
+  const { userName } = useAuthStore();
 
+  useEffect(() => {
+    setCurrentRepository(null);
+  }, []);
   return (
     <>
-      {data.onboardingStep > 0 &&
-      data.onboardingStep < 5 &&
-      !isOnBoardingComplete ? (
+      {data.onboardingStep > 0 && data.onboardingStep < 5 ? (
         <section className="mb-[60px]">
           <h1 className="mb-3 text-[32px] font-bold text-[#D2D3D3]">
             환영합니다, {userName}님!

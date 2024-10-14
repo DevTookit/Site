@@ -120,3 +120,47 @@ select {
     transform: translateY(-10px); /* 위로 이동 */
   }
 }
+
+@layer components {
+  .custom-scrollbar {
+    /* 스크롤바 전체 스타일 */
+    &::-webkit-scrollbar {
+      background: transparent; /* 트랙의 배경을 투명하게 설정 */
+      width: 12px; /* 스크롤바의 너비 */
+      height: 12px; /* 가로 스크롤바의 높이 */
+    }
+
+    /* 스크롤바의 트랙 (배경) */
+    &::-webkit-scrollbar-track {
+      background: transparent; /* 트랙의 배경을 투명하게 설정 */
+      border-radius: 10px; /* 트랙의 모서리 둥글게 */
+    }
+
+    /* 스크롤바의 핸들 (드래그 가능한 부분) */
+    &::-webkit-scrollbar-thumb {
+      background: rgba(
+        136,
+        136,
+        136,
+        0.8
+      ); /* 핸들의 배경색 (투명도 조절 가능) */
+      border-radius: 10px; /* 핸들의 모서리 둥글게 */
+    }
+
+    /* 핸들에 마우스를 올렸을 때의 스타일 */
+    &::-webkit-scrollbar-thumb:hover {
+      background: rgba(
+        85,
+        85,
+        85,
+        0.8
+      ); /* 핸들의 배경색 (hover 시, 투명도 조절 가능) */
+    }
+
+    /* IE 및 Edge */
+    -ms-overflow-style: scrollbar;
+
+    /* Firefox */
+    scrollbar-width: thin; /* 스크롤바의 두께 */
+  }
+}

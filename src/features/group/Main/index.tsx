@@ -10,20 +10,20 @@ import { useEffect, useState } from 'react';
 import groupApi from '@/shared/api/groupApi';
 import bookmarkApi from '@/shared/api/bookmarkApi';
 
-import { LogResponse } from '@/shared/types/groupType';
+import { Log } from '@/shared/types/groupType';
 import { formatTimeAgo } from '@/shared/util/common';
 import { BookmarkResponse } from '@/shared/types/bookmark';
 
 const GroupMain: React.FC = () => {
   const { data } = useLayout();
 
-  const [logs, setLogs] = useState<LogResponse[]>([]);
+  const [logs, setLogs] = useState<Log[]>([]);
   const [bookmarks, setBookmarks] = useState<BookmarkResponse[]>([]);
 
   const init = async () => {
     Promise.all([
       groupApi.getGroupLogs(data.currentGroupTab?.id ?? 0).then((res) => {
-        setLogs(res);
+        setLogs(res.logs);
       }),
       bookmarkApi.getBookmarks(data.currentGroupTab?.id ?? 0).then((res) => {
         setBookmarks(res);
@@ -141,7 +141,7 @@ const GroupMain: React.FC = () => {
         <div className="flex-1">
           <h4 className="mb-[14px] text-xl font-bold text-lighten-500">로그</h4>
           <ul className="overflow-hidden rounded-[10px] bg-darken-200 p-[14px]">
-            {logs.map((el, index) => {
+            {logs?.map((el, index) => {
               return (
                 <li
                   key={`logs_${index}`}

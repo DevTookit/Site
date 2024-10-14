@@ -1,3 +1,4 @@
+import useAuthStore from '@/shared/store/authStore';
 import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -6,6 +7,7 @@ interface ProgressBarProps {
 }
 
 const CreationProgress: React.FC<ProgressBarProps> = ({ duration = 3000 }) => {
+  const { userName } = useAuthStore();
   const navigate = useNavigate();
   const progressRef = useRef<HTMLDivElement>(null);
   const [progressPer, setProgressPer] = useState(0);
@@ -54,7 +56,7 @@ const CreationProgress: React.FC<ProgressBarProps> = ({ duration = 3000 }) => {
           {progressPer}%
         </span>
       </div>
-      <p className="text-base text-lighten-500">영우님의 프로필 생성중</p>
+      <p className="text-base text-lighten-500">{userName}님의 프로필 생성중</p>
     </div>
   );
 };

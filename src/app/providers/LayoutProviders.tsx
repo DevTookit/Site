@@ -115,7 +115,6 @@ export const LayoutProvider: React.FC<{ children: ReactNode }> = ({
         if (res.length) break;
       }
 
-    console.log(childList);
     setData((prevData: LayoutData) => ({
       ...prevData,
       currentCategoryChildList: childList,
