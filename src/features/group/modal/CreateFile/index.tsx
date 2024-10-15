@@ -76,6 +76,11 @@ const CreateFileModal: React.FC<CreateFileModalProps> = ({
       )
       .then(() => {
         setIsOpen(false);
+        const searchParams = new URLSearchParams(location.search);
+        // 현재 시간으로 쿼리 파라미터 업데이트
+        searchParams.set('timestamp', new Date().toISOString());
+        // 쿼리 스트링을 업데이트하며 페이지 리로드
+        navigate(`?${searchParams.toString()}`, { replace: true });
         if (data.onboardingStep === 3) setOnboardingStep(4);
       });
     setLoading(false);

@@ -1,6 +1,7 @@
 import { ChangeEvent, DragEvent } from 'react';
 import Document from '@svg/icon_document.svg?react';
 import Close from '@svg/icon_close.svg?react';
+import { formatBytes } from '@/shared/util/common';
 
 interface CreateFolderProps {
   setFolderName: (folderName: string) => void;
@@ -76,7 +77,7 @@ const CreateFolder: React.FC<CreateFolderProps> = ({
                       {el.name}
                     </span>
                     <span className="text-base text-lighten-600">
-                      {el.size}
+                      {formatBytes(el.size)}
                     </span>
                   </div>
                   <button>

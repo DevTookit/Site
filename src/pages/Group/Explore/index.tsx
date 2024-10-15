@@ -94,8 +94,8 @@ const GroupExplore: React.FC = () => {
   };
 
   useEffect(() => {
-    if (data.onboardingStep < 5 && !isOnBoardingComplete) {
-      alert('온보딩 진행중입니다. 이전 단계를 진행 후 진입 가능합니다.');
+    if (data.onboardingStep < 4 && !isOnBoardingComplete) {
+      alert('앗! 스텝에서 이탈하셨어요!');
       navigate(-1);
     } else {
       init();

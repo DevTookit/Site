@@ -174,10 +174,11 @@ const GroupSideBar: React.FC = () => {
         </div>
         <div className="flex gap-1">
           {data.myJoinedGroupList.map((el, idx) => {
+            if (el.name === '시연그룹1' || el.name === '시연그룹2') return null;
             return (
               <button
                 key={`myjoingroup_${idx}`}
-                className=""
+                className="min-h-10 min-w-10"
                 onClick={() => onClickGroupTab(idx)}
                 onContextMenu={(e) => {
                   setOptions(groupContextOptions);

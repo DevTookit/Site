@@ -64,7 +64,7 @@ const BlogEditor: React.FC = () => {
       <div className="mx-auto mt-10 min-h-[600px] w-full rounded-lg">
         <input
           type="text"
-          placeholder="그룹 이름을 설정해주세요."
+          placeholder="게시글 제목을 설정해주세요."
           onChange={(e) => setName(e.target.value)}
           className="mb-6 h-12 w-full rounded-md border-2 border-solid border-primary bg-primary p-4 pl-0 text-[30px] text-lighten-600 placeholder:text-[30px] placeholder:text-lighten-300"
         />

@@ -79,6 +79,9 @@ const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const initAppData = async () => {
       if (!isOnBoardingComplete) {
         await checkOnboarding();
+      } else {
+        setOnBoardingComplete(true);
+        setOnboardingStep(5);
       }
       console.log(1);
       setInitState(true);

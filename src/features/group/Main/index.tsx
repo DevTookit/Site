@@ -2,6 +2,8 @@
 import ErrorRoudned from '@svg/icon_error_rounded.svg?react';
 import Menu from '@svg/icon_menu.svg?react';
 import BookmarkActive from '@svg/icon_bookmark_active.svg?react';
+import File from '@svg/icon_file.svg?react';
+import Folder from '@svg/icon_folder.svg?react';
 /* hook */
 import useLayout from '@/shared/hooks/useLayout';
 import { useEffect, useState } from 'react';
@@ -114,10 +116,49 @@ const GroupMain: React.FC = () => {
           <h4 className="mb-[14px] text-xl font-bold text-lighten-500">
             최근 게시물
           </h4>
-          <ul className="flex gap-3">
-            <li className="h-40 flex-1 rounded-[10px] bg-darken-200"></li>
-            <li className="h-40 flex-1 rounded-[10px] bg-darken-200"></li>
-            <li className="h-40 flex-1 rounded-[10px] bg-darken-200"></li>
+          <ul className="flex flex-wrap gap-[3%]">
+            <li className="mb-3 flex h-40 min-w-[30%] flex-1 flex-col items-center rounded-[10px] bg-darken-200">
+              <Folder />
+              <span className="text-base font-bold text-lighten-500">
+                UI 아이콘.zip
+              </span>
+              <span className="text-sm text-lighten-300">1.2KB</span>
+            </li>
+            <li className="mb-3 flex h-40 min-w-[30%] flex-1 flex-col items-center rounded-[10px] bg-darken-200">
+              <File />
+              <span className="text-base font-bold text-lighten-500">
+                문서.html
+              </span>
+              <span className="text-sm text-lighten-300">1.2KB</span>
+            </li>
+            <li className="mb-3 flex h-40 min-w-[30%] flex-1 flex-col items-center rounded-[10px] bg-darken-200">
+              <File />
+              <span className="text-base font-bold text-lighten-500">
+                문서2.html
+              </span>
+              <span className="text-sm text-lighten-300">1.2KB</span>
+            </li>
+            <li className="mb-3 flex h-40 min-w-[30%] flex-1 flex-col items-center rounded-[10px] bg-darken-200">
+              <Folder />
+              <span className="text-base font-bold text-lighten-500">
+                UI 아이콘.zip
+              </span>
+              <span className="text-sm text-lighten-300">1.2KB</span>
+            </li>
+            <li className="mb-3 flex h-40 min-w-[30%] flex-1 flex-col items-center rounded-[10px] bg-darken-200">
+              <File />
+              <span className="text-base font-bold text-lighten-500">
+                문서.html
+              </span>
+              <span className="text-sm text-lighten-300">1.2KB</span>
+            </li>
+            <li className="mb-3 flex h-40 min-w-[30%] flex-1 flex-col items-center rounded-[10px] bg-darken-200">
+              <File />
+              <span className="text-base font-bold text-lighten-500">
+                문서2.html
+              </span>
+              <span className="text-sm text-lighten-300">1.2KB</span>
+            </li>
           </ul>
           <h4 className="mb-[14px] mt-6 text-xl font-bold text-lighten-500">
             북마크 목록
@@ -163,7 +204,10 @@ const GroupMain: React.FC = () => {
                     </div>
                   </div>
                   <p className="ml-7 mt-2 text-base font-medium text-lighten-500">
-                    "{el.contentName}" 게시물이 등록되었습니다.
+                    "{el.contentName}"{' '}
+                    {el.type === 'BOARD' || el.type === 'CODE'
+                      ? '게시물이 등록되었습니다.'
+                      : '파일이 업로드되었습니다.'}
                   </p>
                 </li>
               );

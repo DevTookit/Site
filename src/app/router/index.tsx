@@ -84,7 +84,7 @@ const AppRouter: React.FC = () => {
             <LayoutProvider>
               <CreateProvider>
                 <GroupLayout>
-                  <GroupList />
+                  <GroupList key={location.search} />
                 </GroupLayout>
               </CreateProvider>
             </LayoutProvider>

@@ -5,8 +5,14 @@ interface CreateGroupStep1rops {
   setVisibility: (visibility: boolean) => void;
 }
 
-const CreateGroupStep1: React.FC<CreateGroupStep1rops> = () => {
+const CreateGroupStep1: React.FC<CreateGroupStep1rops> = ({
+  setVisibility,
+}) => {
   const [isSelected, setIsSelected] = useState('1');
+  const visibleChange = (val: 'visible-1' | 'visible-2') => {
+    setIsSelected(val);
+    setVisibility(val === 'visible-2');
+  };
   return (
     <div className="rounded-t bg-primary p-10">
       <h4 className="mb-[14px] text-xl font-bold text-lighten-500">
@@ -20,7 +26,9 @@ const CreateGroupStep1: React.FC<CreateGroupStep1rops> = () => {
           label="개인 그룹"
           dscr="나만 볼 수 있는 개인 페이지"
           isSelected={isSelected === 'visible-1'}
-          onChange={setIsSelected}
+          onChange={() => {
+            visibleChange('visible-1');
+          }}
         />
         <RadioGroup.Button
           name="visibleYn"
@@ -28,7 +36,9 @@ const CreateGroupStep1: React.FC<CreateGroupStep1rops> = () => {
           label="공개 그룹"
           dscr="누구나 방문할 수 있는 오픈 페이지"
           isSelected={isSelected === 'visible-2'}
-          onChange={setIsSelected}
+          onChange={() => {
+            visibleChange('visible-2');
+          }}
         />
       </RadioGroup>
       <p className="text-base text-lighten-400">

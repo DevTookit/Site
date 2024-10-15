@@ -20,15 +20,19 @@ import { ContentResponse } from '@/shared/types/contentType';
 import useLoadingStore from '@/shared/store/loading';
 import bookmarkApi from '@/shared/api/bookmarkApi';
 import { converterJson } from '@/shared/util/common';
+import { useNavigate } from 'react-router-dom';
+import useAuthStore from '@/shared/store/authStore';
 
 /* hook */
 
 const GroupList: React.FC = () => {
+  const navigate = useNavigate();
   const setLoading = useLoadingStore((state) => state.setLoading);
   const { data } = useLayout();
   const [tab, setTab] = useState<'CODE' | 'BOARD' | 'FOLDER' | ''>('');
   const [fileModalisOpen, setFileModalisOpen] = useState(false);
   const [list, setList] = useState<any>([]);
+  const { isOnBoardingComplete } = useAuthStore();
 
   const onHandleTabBg = (tabIdx: number) => {
     const tabTypeIndex = {
@@ -104,7 +108,12 @@ const GroupList: React.FC = () => {
   };
 
   useEffect(() => {
-    getList('');
+    if (data.onboardingStep < 3 && !isOnBoardingComplete) {
+      alert('앗! 스텝에서 이탈하셨어요!');
+      navigate(-1);
+    } else {
+      getList('');
+    }
   }, []);
 
   return (

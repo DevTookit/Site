@@ -43,11 +43,11 @@ const GroupOnboarding: React.FC = () => {
         name: repositories[0].name,
         depth1: '첫 게시글 작성하기',
       });
+      navigate('/group/list');
     } else {
       alert('저장소가 존재하지 않습니다.');
       return;
     }
-    setFileModalisOpen(true);
   };
 
   return (
